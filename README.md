@@ -2,7 +2,8 @@ Shadow
 ======
 
 All credit goes to <https://github.com/umd-mith/webvtt-player>. This is a
-slightly modified version to allow choosing audio files through a dropdown menu.
+slightly modified version to allow choosing audio files through a dropdown menu
+or uploading them from a local device.
 
 
 ## Contributions Welcomed
