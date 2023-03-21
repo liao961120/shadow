@@ -1,7 +1,7 @@
 Shadow
 ======
 
-All credits go to <https://github.com/umd-mith/webvtt-player>. This is a
+All credit goes to <https://github.com/umd-mith/webvtt-player>. This is a
 slightly modified version to allow choosing audio files through a dropdown menu.
 
 
