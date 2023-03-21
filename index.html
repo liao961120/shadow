@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>webvtt-player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> 
+  </head>
+  <body>
+    <header>
+      webvtt-player (Forked)
+      <hr>
+    </header>
+    
+    <label for="Audio">Select Audio:</label>
+    <select id="audio-id"></select>
+    <br ><br >
+
+    <div id="webvtt-player" data-audio="data/rethinking-lec13/audio.mp3" data-transcript="data/rethinking-lec13/transcript.vtt"></div>
+
+    <script id="player-src" type="text/javascript" src="webvtt-player.js"></script>
+
+    <script>
+      var PlayerSrc = document.getElementById('player-src').cloneNode(true);
+      var select = document.getElementById("audio-id");
+
+      function reload_player() {
+        document.getElementById("player-src").remove();
+        var script= document.createElement('script');
+        script.src= PlayerSrc.src;
+        script.id = "player-src";
+        document.querySelector("body").appendChild(script);
+      }
+
+      // Audio file dropdown
+      select.addEventListener("change", function(e) {
+        var path = select.value;
+        var player = document.getElementById("webvtt-player")
+        player.dataset.audio = `data/${path}/audio.mp3`
+        player.dataset.transcript = `data/${path}/transcript.vtt`
+        reload_player();
+      })
+
+      // Get Audio paths in data/
+      fetch('playlist.txt')
+        .then(function(response) {
+          return response.text();
+        })
+        .then(function(txt) {
+          var files = txt.trim().split("\n").map( e => e.replace(/\/$/, "") );
+          files.forEach((e) => {
+            var opt = document.createElement("option")
+            opt.value = e;
+            opt.innerText = e;
+            select.appendChild(opt)
+          })
+        });
+    </script>
+
+
+  
+
+</body>
+</html>

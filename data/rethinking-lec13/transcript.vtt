@@ -1,0 +1,4082 @@
+WEBVTT
+
+00:00:00.599 --> 00:00:04.140
+welcome to lecture 13 of statistical
+
+00:00:04.140 --> 00:00:05.839
+rethinking
+
+00:00:05.839 --> 00:00:07.940
+2023.
+
+00:00:07.940 --> 00:00:10.920
+when I was a kid we were really into
+
+00:00:10.920 --> 00:00:13.740
+books uh it was the early days of the
+
+00:00:13.740 --> 00:00:15.540
+internet and I guess you know books were
+
+00:00:15.540 --> 00:00:18.440
+pretty cool so at the library we used to
+
+00:00:18.440 --> 00:00:21.420
+exchange these Choose Your Own Adventure
+
+00:00:21.420 --> 00:00:23.760
+books when they came in lots of exciting
+
+00:00:23.760 --> 00:00:26.100
+titles like mystery of the Maya island
+
+00:00:26.100 --> 00:00:29.340
+of time cup of death
+
+00:00:29.340 --> 00:00:32.640
+what was great about these books is that
+
+00:00:32.640 --> 00:00:34.200
+well they were distracting and
+
+00:00:34.200 --> 00:00:36.480
+entertaining but they're kind of book
+
+00:00:36.480 --> 00:00:38.700
+where you get to choose branching pass
+
+00:00:38.700 --> 00:00:41.100
+like the garden of forking pass a garden
+
+00:00:41.100 --> 00:00:43.200
+of forking data from the first half of
+
+00:00:43.200 --> 00:00:44.520
+the course
+
+00:00:44.520 --> 00:00:46.440
+you reach a particular page and you're
+
+00:00:46.440 --> 00:00:48.899
+given a choice and you choose which page
+
+00:00:48.899 --> 00:00:50.940
+to turn to next and the story continues
+
+00:00:50.940 --> 00:00:51.899
+from there
+
+00:00:51.899 --> 00:00:54.719
+and many many stories are embedded in a
+
+00:00:54.719 --> 00:00:56.760
+single book through this branching path
+
+00:00:56.760 --> 00:00:59.340
+mechanism so for this particular book
+
+00:00:59.340 --> 00:01:02.820
+the island of time this is its map and
+
+00:01:02.820 --> 00:01:06.720
+there are 12 possible endings and from a
+
+00:01:06.720 --> 00:01:08.700
+causal inference perspective these books
+
+00:01:08.700 --> 00:01:10.439
+are relevant because you can explore
+
+00:01:10.439 --> 00:01:12.540
+counter factuals see what would have
+
+00:01:12.540 --> 00:01:14.040
+happened if you had done something else
+
+00:01:14.040 --> 00:01:15.540
+this sort of thing we can never really
+
+00:01:15.540 --> 00:01:19.640
+do in real data analysis
+
+00:01:20.040 --> 00:01:22.500
+not all of these Adventures are as
+
+00:01:22.500 --> 00:01:25.259
+simple as the previous one The Mystery
+
+00:01:25.259 --> 00:01:26.939
+of the Maya for example has many many
+
+00:01:26.939 --> 00:01:30.000
+more possible endings 39 in total many
+
+00:01:30.000 --> 00:01:32.159
+other many branching decisions that lead
+
+00:01:32.159 --> 00:01:34.200
+to those and the possibility of
+
+00:01:34.200 --> 00:01:36.840
+returning to the start of various points
+
+00:01:36.840 --> 00:01:40.979
+for looping pass a directed cyclic graph
+
+00:01:40.979 --> 00:01:44.400
+if you will why am I talking about kids
+
+00:01:44.400 --> 00:01:46.799
+books well
+
+00:01:46.799 --> 00:01:50.640
+um in this course I encourage you to
+
+00:01:50.640 --> 00:01:52.259
+follow this idea of drawing the Bayesian
+
+00:01:52.259 --> 00:01:55.979
+owl that there's this five-step plan to
+
+00:01:55.979 --> 00:01:57.960
+success where we start with a clearly
+
+00:01:57.960 --> 00:02:01.500
+defined theoretical estimate then we use
+
+00:02:01.500 --> 00:02:04.040
+that to sketch out some causal models
+
+00:02:04.040 --> 00:02:06.540
+make them into real generative models
+
+00:02:06.540 --> 00:02:08.700
+that can produce synthetic data and then
+
+00:02:08.700 --> 00:02:10.860
+we use those two steps to build
+
+00:02:10.860 --> 00:02:12.900
+statistical models through the logic
+
+00:02:12.900 --> 00:02:15.060
+either of do calculus
+
+00:02:15.060 --> 00:02:17.340
+or by expressing degenerative model
+
+00:02:17.340 --> 00:02:19.500
+directly as a statistical model
+
+00:02:19.500 --> 00:02:22.020
+then we need to test quality assurance
+
+00:02:22.020 --> 00:02:25.560
+is necessary now we Sim use simulations
+
+00:02:25.560 --> 00:02:27.300
+from the generative model to validate
+
+00:02:27.300 --> 00:02:31.140
+the estimator and then only then are we
+
+00:02:31.140 --> 00:02:34.140
+ready to analyze the real data
+
+00:02:34.140 --> 00:02:35.940
+the disservice with this outline of
+
+00:02:35.940 --> 00:02:38.520
+course is that you know just from the
+
+00:02:38.520 --> 00:02:39.660
+course material and the homework
+
+00:02:39.660 --> 00:02:41.519
+assignments that it's much more
+
+00:02:41.519 --> 00:02:42.959
+complicated than this there are
+
+00:02:42.959 --> 00:02:45.239
+branching paths it's not a straight line
+
+00:02:45.239 --> 00:02:47.040
+from one to five there are lots of
+
+00:02:47.040 --> 00:02:48.720
+little subjective decisions that have to
+
+00:02:48.720 --> 00:02:51.060
+be made in between
+
+00:02:51.060 --> 00:02:53.099
+uh it's much more like this the mystery
+
+00:02:53.099 --> 00:02:55.200
+of the model and there are many many
+
+00:02:55.200 --> 00:02:57.379
+possible endings more than 39 for sure
+
+00:02:57.379 --> 00:03:00.599
+but reassuringly when you reach a bad
+
+00:03:00.599 --> 00:03:02.760
+ending and your model doesn't work you
+
+00:03:02.760 --> 00:03:05.040
+can return to the start and fix it and
+
+00:03:05.040 --> 00:03:06.420
+those are the tools that is my
+
+00:03:06.420 --> 00:03:09.239
+responsibility to teach you
+
+00:03:09.239 --> 00:03:11.760
+and part of that is when drawing a real
+
+00:03:11.760 --> 00:03:13.920
+owl for example there are many technical
+
+00:03:13.920 --> 00:03:16.379
+skills involved in technical details
+
+00:03:16.379 --> 00:03:18.959
+from the choice of pencil to how you
+
+00:03:18.959 --> 00:03:19.860
+hold it
+
+00:03:19.860 --> 00:03:22.080
+and everybody knows that in every art
+
+00:03:22.080 --> 00:03:23.700
+form or
+
+00:03:23.700 --> 00:03:24.900
+um
+
+00:03:24.900 --> 00:03:28.500
+and the analogy in statistical modeling
+
+00:03:28.500 --> 00:03:30.300
+are these little things about estimators
+
+00:03:30.300 --> 00:03:33.000
+and coding them and making them run like
+
+00:03:33.000 --> 00:03:35.280
+the partial pooling thing that I showed
+
+00:03:35.280 --> 00:03:37.940
+you in the previous lecture last week
+
+00:03:37.940 --> 00:03:39.720
+these are things that don't really
+
+00:03:39.720 --> 00:03:42.739
+appear in the generative model typically
+
+00:03:42.739 --> 00:03:45.659
+but if we leave them out we leave
+
+00:03:45.659 --> 00:03:48.540
+information on the table we could do
+
+00:03:48.540 --> 00:03:50.040
+better if we pick up that information
+
+00:03:50.040 --> 00:03:53.580
+and incorporate it correctly
+
+00:03:53.580 --> 00:03:55.920
+so I want to introduce you to your
+
+00:03:55.920 --> 00:03:57.900
+multi-level Adventures the sorts of
+
+00:03:57.900 --> 00:04:00.480
+branching pass that will lead you to
+
+00:04:00.480 --> 00:04:02.760
+good estimation
+
+00:04:02.760 --> 00:04:06.180
+um and from this point on in the course
+
+00:04:06.180 --> 00:04:08.280
+I think the foundations are in place
+
+00:04:08.280 --> 00:04:10.560
+once you've got the basics of partial
+
+00:04:10.560 --> 00:04:12.900
+pooling you've got a really strong
+
+00:04:12.900 --> 00:04:14.760
+foundation in advanced statistical
+
+00:04:14.760 --> 00:04:16.500
+modeling and from there you can choose
+
+00:04:16.500 --> 00:04:19.620
+to invest as little or as much as you
+
+00:04:19.620 --> 00:04:21.720
+want in any particular sub area there's
+
+00:04:21.720 --> 00:04:24.900
+no obligation to learn it all that's the
+
+00:04:24.900 --> 00:04:27.419
+way I think of it is the discourse up to
+
+00:04:27.419 --> 00:04:30.300
+the first multi-level modeling lecture
+
+00:04:30.300 --> 00:04:32.460
+is a foundational thing that most
+
+00:04:32.460 --> 00:04:34.380
+behavioral scientists and biological
+
+00:04:34.380 --> 00:04:36.840
+scientists need and after that you
+
+00:04:36.840 --> 00:04:38.520
+choose to specialize and so from here
+
+00:04:38.520 --> 00:04:42.180
+I'd like to propose some some choices
+
+00:04:42.180 --> 00:04:43.979
+some branching pass for all of you
+
+00:04:43.979 --> 00:04:45.660
+who've been following along the lectures
+
+00:04:45.660 --> 00:04:47.460
+or taking the course and the first of
+
+00:04:47.460 --> 00:04:50.400
+course is to return to the start
+
+00:04:50.400 --> 00:04:52.620
+start again from the first lecture come
+
+00:04:52.620 --> 00:04:54.780
+back through take notes on what you
+
+00:04:54.780 --> 00:04:56.520
+didn't understand the first time and
+
+00:04:56.520 --> 00:04:58.139
+really reinforce your foundation because
+
+00:04:58.139 --> 00:04:59.820
+that Foundation is the most important
+
+00:04:59.820 --> 00:05:01.560
+thing and after you've repeated that
+
+00:05:01.560 --> 00:05:02.820
+Foundation you'll feel much better
+
+00:05:02.820 --> 00:05:04.259
+because you'll understand it much better
+
+00:05:04.259 --> 00:05:06.960
+the second time through give you a warm
+
+00:05:06.960 --> 00:05:09.300
+glow and then you'll be in a much better
+
+00:05:09.300 --> 00:05:11.040
+position to decide what you want to do
+
+00:05:11.040 --> 00:05:12.479
+next
+
+00:05:12.479 --> 00:05:14.460
+you could also for the rest of this
+
+00:05:14.460 --> 00:05:15.560
+course
+
+00:05:15.560 --> 00:05:19.620
+skim and index what remains don't put
+
+00:05:19.620 --> 00:05:21.060
+too much pressure on yourself just try
+
+00:05:21.060 --> 00:05:25.800
+to learn to learn the details just sit
+
+00:05:25.800 --> 00:05:28.740
+back be entertained see the kinds of
+
+00:05:28.740 --> 00:05:31.100
+applications that are possible
+
+00:05:31.100 --> 00:05:33.600
+index them in your mind so that if you
+
+00:05:33.600 --> 00:05:35.160
+come across a research problem or you
+
+00:05:35.160 --> 00:05:36.419
+need something like that you can come
+
+00:05:36.419 --> 00:05:38.940
+back to this material and choose to go
+
+00:05:38.940 --> 00:05:41.820
+in as deeply as you need to
+
+00:05:41.820 --> 00:05:43.919
+um third you could pick and choose uh
+
+00:05:43.919 --> 00:05:46.800
+you could skip over whole examples I
+
+00:05:46.800 --> 00:05:49.259
+will not be offended and engage only
+
+00:05:49.259 --> 00:05:50.639
+with those topics that interest you
+
+00:05:50.639 --> 00:05:52.740
+because from here on out it's going to
+
+00:05:52.740 --> 00:05:54.419
+get more specialized
+
+00:05:54.419 --> 00:05:56.940
+um this lecture and the next are not too
+
+00:05:56.940 --> 00:05:59.820
+specialized but they will get
+
+00:05:59.820 --> 00:06:01.500
+increasingly specialized in the week
+
+00:06:01.500 --> 00:06:04.139
+after and we'll look at topics like
+
+00:06:04.139 --> 00:06:06.479
+social networks and phylogenies and it's
+
+00:06:06.479 --> 00:06:08.280
+perfectly fine not to be interested in
+
+00:06:08.280 --> 00:06:10.620
+those topics but if you are interested
+
+00:06:10.620 --> 00:06:12.419
+in those topics then wait for those and
+
+00:06:12.419 --> 00:06:14.400
+focus on those you don't you don't have
+
+00:06:14.400 --> 00:06:15.840
+no obligation to focus on the other
+
+00:06:15.840 --> 00:06:17.880
+pieces
+
+00:06:17.880 --> 00:06:19.680
+um fourth option is what I call the
+
+00:06:19.680 --> 00:06:21.419
+Bayesian flow which is what I've been
+
+00:06:21.419 --> 00:06:23.880
+encouraging from the beginning try to
+
+00:06:23.880 --> 00:06:26.819
+learn enough in each part just to keep
+
+00:06:26.819 --> 00:06:29.520
+moving just to hang on and that's fine
+
+00:06:29.520 --> 00:06:32.639
+you don't I think it's actually a bit
+
+00:06:32.639 --> 00:06:34.199
+foolish to try to understand everything
+
+00:06:34.199 --> 00:06:36.960
+on the first go but just enough to keep
+
+00:06:36.960 --> 00:06:39.000
+moving so that you're learning a little
+
+00:06:39.000 --> 00:06:42.360
+bit and then you can do it all again at
+
+00:06:42.360 --> 00:06:46.500
+some point or better yet stop and engage
+
+00:06:46.500 --> 00:06:49.560
+with your own research problems when you
+
+00:06:49.560 --> 00:06:52.620
+feel ready and if you reach a stopping
+
+00:06:52.620 --> 00:06:54.840
+point a block a wall in your own
+
+00:06:54.840 --> 00:06:56.460
+research problems then you can come back
+
+00:06:56.460 --> 00:07:00.199
+here and find some help
+
+00:07:02.419 --> 00:07:07.319
+so the distinction that I need to
+
+00:07:07.319 --> 00:07:09.960
+prepare you for so that you can Branch
+
+00:07:09.960 --> 00:07:12.240
+out and choose your past is this
+
+00:07:12.240 --> 00:07:13.560
+distinction between clusters and
+
+00:07:13.560 --> 00:07:16.139
+features in multi-level models
+
+00:07:16.139 --> 00:07:18.960
+and basically every kind of advanced
+
+00:07:18.960 --> 00:07:20.940
+statistical model or machine learning
+
+00:07:20.940 --> 00:07:22.500
+model is some kind of multi-level model
+
+00:07:22.500 --> 00:07:25.380
+so this distinction is very useful no
+
+00:07:25.380 --> 00:07:27.240
+matter what you end up doing later
+
+00:07:27.240 --> 00:07:30.000
+so clusters are the groups the subgroups
+
+00:07:30.000 --> 00:07:31.919
+in the data
+
+00:07:31.919 --> 00:07:35.340
+um things like tanks uh in the tadpole
+
+00:07:35.340 --> 00:07:38.060
+example stories and the trolley example
+
+00:07:38.060 --> 00:07:40.800
+individuals also in the Charlie example
+
+00:07:40.800 --> 00:07:43.440
+or in the tadpole example or departments
+
+00:07:43.440 --> 00:07:46.440
+in the Berkeley admissions data example
+
+00:07:46.440 --> 00:07:49.380
+these are subsets in which there are
+
+00:07:49.380 --> 00:07:52.740
+multiple observations
+
+00:07:52.740 --> 00:07:54.479
+and then there are features and these
+
+00:07:54.479 --> 00:07:56.520
+are aspects of the model things we'd
+
+00:07:56.520 --> 00:07:58.800
+like to estimate quite typically that
+
+00:07:58.800 --> 00:08:01.400
+may vary by cluster
+
+00:08:01.400 --> 00:08:03.360
+and
+
+00:08:03.360 --> 00:08:05.460
+the way we program these different
+
+00:08:05.460 --> 00:08:08.099
+things into the models is the thing you
+
+00:08:08.099 --> 00:08:09.599
+want to get clear and so I'm going to do
+
+00:08:09.599 --> 00:08:11.360
+another lecture
+
+00:08:11.360 --> 00:08:14.240
+today which basically
+
+00:08:14.240 --> 00:08:18.720
+repeats and gets a bit more involved in
+
+00:08:18.720 --> 00:08:20.220
+the material from the previous lecture
+
+00:08:20.220 --> 00:08:21.360
+so in a sense there's not going to be
+
+00:08:21.360 --> 00:08:23.160
+anything new and yet I hope it feels
+
+00:08:23.160 --> 00:08:25.500
+like it's a bit new because it's good to
+
+00:08:25.500 --> 00:08:27.479
+reinforce this basic distinction and
+
+00:08:27.479 --> 00:08:29.039
+understand what's going on and this will
+
+00:08:29.039 --> 00:08:30.720
+give me an opportunity to start
+
+00:08:30.720 --> 00:08:33.419
+introducing some of the
+
+00:08:33.419 --> 00:08:36.719
+uh branching pass and in the mechanism
+
+00:08:36.719 --> 00:08:40.219
+of really making this stuff work
+
+00:08:40.620 --> 00:08:43.140
+um so in the Machinery when you choose
+
+00:08:43.140 --> 00:08:45.660
+to add more clusters so often in a
+
+00:08:45.660 --> 00:08:47.220
+particular problem there's not just one
+
+00:08:47.220 --> 00:08:49.019
+kind of cluster that you want to
+
+00:08:49.019 --> 00:08:52.320
+structure by not just tanks not just
+
+00:08:52.320 --> 00:08:54.600
+stories but also individuals and and
+
+00:08:54.600 --> 00:08:57.060
+other things maybe not just regions of
+
+00:08:57.060 --> 00:08:58.680
+countries but countries themselves as
+
+00:08:58.680 --> 00:09:00.000
+well
+
+00:09:00.000 --> 00:09:02.399
+when you add more clusters to the data I
+
+00:09:02.399 --> 00:09:03.720
+actually think this is the Least
+
+00:09:03.720 --> 00:09:06.180
+Complicated thing you need more index
+
+00:09:06.180 --> 00:09:07.740
+variables so it's just categorical
+
+00:09:07.740 --> 00:09:10.680
+variables like before and you just need
+
+00:09:10.680 --> 00:09:12.600
+to add population priors for each so
+
+00:09:12.600 --> 00:09:16.320
+this is not the hard problem at all it's
+
+00:09:16.320 --> 00:09:18.959
+just copying and pasting and renaming
+
+00:09:18.959 --> 00:09:21.000
+parameters for the most part
+
+00:09:21.000 --> 00:09:23.279
+adding features is where the subtlety
+
+00:09:23.279 --> 00:09:25.019
+lies and that's what we're going to talk
+
+00:09:25.019 --> 00:09:26.220
+about today
+
+00:09:26.220 --> 00:09:29.000
+when you add features you add parameters
+
+00:09:29.000 --> 00:09:31.380
+sometimes quite a lot of parameters
+
+00:09:31.380 --> 00:09:33.720
+hundreds or thousands or tens of
+
+00:09:33.720 --> 00:09:34.920
+thousands
+
+00:09:34.920 --> 00:09:37.080
+and what this means is there are more
+
+00:09:37.080 --> 00:09:39.779
+dimensions in each population prior
+
+00:09:39.779 --> 00:09:42.839
+because there are more aspects of each
+
+00:09:42.839 --> 00:09:45.180
+cluster which can vary and this leads to
+
+00:09:45.180 --> 00:09:47.399
+additional complexity and additional
+
+00:09:47.399 --> 00:09:49.680
+interpretation issues so I'm going to
+
+00:09:49.680 --> 00:09:51.240
+slowly move through an example which
+
+00:09:51.240 --> 00:09:53.220
+I'll build over this lecture and the
+
+00:09:53.220 --> 00:09:55.580
+next to help you understand
+
+00:09:55.580 --> 00:10:00.000
+this this engineering if you will and
+
+00:10:00.000 --> 00:10:03.620
+why it's really useful for research
+
+00:10:05.040 --> 00:10:08.640
+one of the things that helps me not get
+
+00:10:08.640 --> 00:10:11.120
+too lost in the possible branching past
+
+00:10:11.120 --> 00:10:13.800
+is to keep reminding myself what I'm
+
+00:10:13.800 --> 00:10:16.140
+trying to do right this is step one of
+
+00:10:16.140 --> 00:10:17.540
+drawing the owl
+
+00:10:17.540 --> 00:10:21.300
+and varying effects for us are a way to
+
+00:10:21.300 --> 00:10:24.180
+try to estimate unmeasured confounds
+
+00:10:24.180 --> 00:10:26.959
+this is quite often what they're for
+
+00:10:26.959 --> 00:10:30.360
+confounds in the soft sense of competing
+
+00:10:30.360 --> 00:10:34.920
+causes or confounds in the hard sense of
+
+00:10:34.920 --> 00:10:38.339
+common causes that are unobserved
+
+00:10:38.339 --> 00:10:40.019
+so the varying effect strategy to remind
+
+00:10:40.019 --> 00:10:42.839
+you is we have unmeasured features of
+
+00:10:42.839 --> 00:10:46.140
+the Clusters we believe they exist or
+
+00:10:46.140 --> 00:10:47.640
+they or we're worried that they exist
+
+00:10:47.640 --> 00:10:50.459
+and these leave some imprint on the data
+
+00:10:50.459 --> 00:10:53.100
+but we have multiple observations from
+
+00:10:53.100 --> 00:10:54.720
+each cluster and this gives us the
+
+00:10:54.720 --> 00:10:56.399
+possibility to actually estimate things
+
+00:10:56.399 --> 00:10:59.040
+we have not measured
+
+00:10:59.040 --> 00:10:59.940
+um
+
+00:10:59.940 --> 00:11:03.480
+and the reason we use partial pooling is
+
+00:11:03.480 --> 00:11:05.040
+because it gives us better estimates of
+
+00:11:05.040 --> 00:11:06.480
+those things because it borrows
+
+00:11:06.480 --> 00:11:09.000
+strengths from across the Clusters from
+
+00:11:09.000 --> 00:11:10.440
+a predicted perspective this is
+
+00:11:10.440 --> 00:11:11.820
+important because it gives us better
+
+00:11:11.820 --> 00:11:14.040
+estimates it makes us more accurate in
+
+00:11:14.040 --> 00:11:16.380
+our predictions it gives us
+
+00:11:16.380 --> 00:11:18.120
+regularization
+
+00:11:18.120 --> 00:11:21.060
+from a causal perspective there are
+
+00:11:21.060 --> 00:11:23.040
+inferential threats
+
+00:11:23.040 --> 00:11:24.600
+um the UN the things we have not
+
+00:11:24.600 --> 00:11:27.320
+measured are the most terrifying things
+
+00:11:27.320 --> 00:11:30.000
+but repeat observations within clusters
+
+00:11:30.000 --> 00:11:32.459
+give us some hope
+
+00:11:32.459 --> 00:11:34.019
+you've already seen some examples of
+
+00:11:34.019 --> 00:11:36.540
+this uh think back to the introductory
+
+00:11:36.540 --> 00:11:38.640
+causal inference lectures this example
+
+00:11:38.640 --> 00:11:40.920
+of grandparents education of
+
+00:11:40.920 --> 00:11:42.720
+grandparents influence on the education
+
+00:11:42.720 --> 00:11:44.399
+of their own children and their
+
+00:11:44.399 --> 00:11:48.000
+grandchildren and I introduced the idea
+
+00:11:48.000 --> 00:11:51.740
+of this haunting that neighborhoods
+
+00:11:51.740 --> 00:11:54.660
+induce shared exposures between parents
+
+00:11:54.660 --> 00:11:57.420
+and their kids and this is a thing that
+
+00:11:57.420 --> 00:11:59.579
+stops us from doing a mediation analysis
+
+00:11:59.579 --> 00:12:01.260
+on this on on measuring the direct
+
+00:12:01.260 --> 00:12:03.440
+effect of grandparents on their children
+
+00:12:03.440 --> 00:12:07.380
+but if we have families in the same
+
+00:12:07.380 --> 00:12:08.760
+neighborhoods and we have repeat
+
+00:12:08.760 --> 00:12:11.160
+observations on those neighborhoods and
+
+00:12:11.160 --> 00:12:12.680
+then we can use
+
+00:12:12.680 --> 00:12:15.839
+estimation varying effects estimates to
+
+00:12:15.839 --> 00:12:17.279
+estimate those unmeasured features of
+
+00:12:17.279 --> 00:12:20.540
+neighborhoods potentially
+
+00:12:20.640 --> 00:12:24.600
+in the trolley problem example
+
+00:12:24.600 --> 00:12:26.519
+I ended that example by talking about
+
+00:12:26.519 --> 00:12:29.279
+the fact that each individual had
+
+00:12:29.279 --> 00:12:30.959
+responded to I think 30 different
+
+00:12:30.959 --> 00:12:34.800
+trolley problems and individuals vary a
+
+00:12:34.800 --> 00:12:37.079
+lot in how they make use of the
+
+00:12:37.079 --> 00:12:39.360
+subjective scale and that adds a lot of
+
+00:12:39.360 --> 00:12:41.519
+noise to the responses and this is a
+
+00:12:41.519 --> 00:12:44.040
+competing cause if we could estimate
+
+00:12:44.040 --> 00:12:46.139
+those individual features let's just
+
+00:12:46.139 --> 00:12:48.240
+call it personality that affects how
+
+00:12:48.240 --> 00:12:50.220
+reactive they are to the scale that
+
+00:12:50.220 --> 00:12:52.019
+would help us get better estimates of
+
+00:12:52.019 --> 00:12:54.660
+the treatment effects I think it's also
+
+00:12:54.660 --> 00:12:56.300
+quite likely
+
+00:12:56.300 --> 00:12:59.940
+in that particular experiment that these
+
+00:12:59.940 --> 00:13:01.980
+individual features also affect
+
+00:13:01.980 --> 00:13:03.440
+participation
+
+00:13:03.440 --> 00:13:06.180
+and therefore those individual
+
+00:13:06.180 --> 00:13:07.920
+unmeasured individual features may be a
+
+00:13:07.920 --> 00:13:10.740
+confound and so it's even worse than
+
+00:13:10.740 --> 00:13:12.720
+that yeah
+
+00:13:12.720 --> 00:13:15.060
+that they're sampling bias through those
+
+00:13:15.060 --> 00:13:18.019
+personality features
+
+00:13:21.240 --> 00:13:24.720
+um a political science example so I had
+
+00:13:24.720 --> 00:13:26.760
+a colleague back in California who was
+
+00:13:26.760 --> 00:13:28.920
+really interested in why some countries
+
+00:13:28.920 --> 00:13:30.779
+go to war and some governmental forms go
+
+00:13:30.779 --> 00:13:33.060
+to war there's this there's this kind of
+
+00:13:33.060 --> 00:13:34.920
+folks saying that democracies never go
+
+00:13:34.920 --> 00:13:36.959
+to war against one another
+
+00:13:36.959 --> 00:13:38.240
+um
+
+00:13:38.240 --> 00:13:41.339
+and uh so you can imagine in a schematic
+
+00:13:41.339 --> 00:13:44.220
+you've got this idea that you have some
+
+00:13:44.220 --> 00:13:47.279
+time series and uh there are periods in
+
+00:13:47.279 --> 00:13:48.660
+which different nations are Award with
+
+00:13:48.660 --> 00:13:49.500
+one another and they have different
+
+00:13:49.500 --> 00:13:51.779
+governmental forms G1 and G2 at that
+
+00:13:51.779 --> 00:13:53.519
+time and you've measured some other
+
+00:13:53.519 --> 00:13:55.200
+stuff about them like their economies
+
+00:13:55.200 --> 00:13:58.680
+and and so on those are the X one and X2
+
+00:13:58.680 --> 00:14:00.600
+variables of the of the countries one
+
+00:14:00.600 --> 00:14:03.480
+and two and the problem in inference in
+
+00:14:03.480 --> 00:14:04.980
+this which makes this a sort of
+
+00:14:04.980 --> 00:14:06.839
+never-ending debate
+
+00:14:06.839 --> 00:14:09.959
+is that there are lots of potentially
+
+00:14:09.959 --> 00:14:13.019
+unmeasured things about Nations that can
+
+00:14:13.019 --> 00:14:15.060
+influence all of these variables and
+
+00:14:15.060 --> 00:14:17.459
+therefore are confounds
+
+00:14:17.459 --> 00:14:19.079
+um things like their geography their
+
+00:14:19.079 --> 00:14:21.060
+natural resources uh their cultural
+
+00:14:21.060 --> 00:14:24.139
+history and so on
+
+00:14:24.360 --> 00:14:25.940
+um and these are
+
+00:14:25.940 --> 00:14:28.800
+things that we might be able to estimate
+
+00:14:28.800 --> 00:14:32.060
+with repeat observations
+
+00:14:33.420 --> 00:14:34.800
+so
+
+00:14:34.800 --> 00:14:36.480
+the point of all these examples is to
+
+00:14:36.480 --> 00:14:38.820
+say we're interested in varying effects
+
+00:14:38.820 --> 00:14:40.500
+both from a predictive perspective
+
+00:14:40.500 --> 00:14:42.600
+because they regularize a hand from a
+
+00:14:42.600 --> 00:14:43.980
+causal inference perspective because
+
+00:14:43.980 --> 00:14:47.480
+it's a chance for us to estimate
+
+00:14:47.480 --> 00:14:51.180
+unobserved unmeasured confounds
+
+00:14:51.180 --> 00:14:52.740
+there's an alternative approach called
+
+00:14:52.740 --> 00:14:55.019
+the fixed effect approach if you watch
+
+00:14:55.019 --> 00:14:56.880
+the one of the bonus rounds from last
+
+00:14:56.880 --> 00:14:59.339
+week I described it there but if you
+
+00:14:59.339 --> 00:15:02.339
+didn't very quickly fixed effects are
+
+00:15:02.339 --> 00:15:04.220
+varying effects with
+
+00:15:04.220 --> 00:15:07.139
+an infinite standard deviation and so
+
+00:15:07.139 --> 00:15:09.480
+they don't do any pooling at all in
+
+00:15:09.480 --> 00:15:11.699
+effect they use only the data from each
+
+00:15:11.699 --> 00:15:13.500
+individual cluster to estimate features
+
+00:15:13.500 --> 00:15:14.820
+of that cluster
+
+00:15:14.820 --> 00:15:18.720
+uh this leads them to overfit yes but
+
+00:15:18.720 --> 00:15:20.279
+they they have some advantages in
+
+00:15:20.279 --> 00:15:22.380
+dealing with group level compounds as I
+
+00:15:22.380 --> 00:15:24.540
+described in that bonus round
+
+00:15:24.540 --> 00:15:25.500
+um
+
+00:15:25.500 --> 00:15:27.060
+they have the disadvantage of not
+
+00:15:27.060 --> 00:15:29.519
+allowing you uh to study uh cluster
+
+00:15:29.519 --> 00:15:32.040
+level uh causes
+
+00:15:32.040 --> 00:15:34.940
+uh
+
+00:15:35.279 --> 00:15:38.579
+in the bonus round I I argued that there
+
+00:15:38.579 --> 00:15:39.959
+are plenty of times when fixed effects
+
+00:15:39.959 --> 00:15:42.720
+are fine in this lecture I'm going to
+
+00:15:42.720 --> 00:15:45.180
+show you one of the reasons that in
+
+00:15:45.180 --> 00:15:47.279
+realistic research with finite sample
+
+00:15:47.279 --> 00:15:50.459
+sizes uh they're often quite impractical
+
+00:15:50.459 --> 00:15:54.060
+and the good news is they don't offer
+
+00:15:54.060 --> 00:15:56.160
+any unique benefits over over varying
+
+00:15:56.160 --> 00:15:57.959
+effects we can deal with group level
+
+00:15:57.959 --> 00:15:59.880
+compounds and varying effects as well as
+
+00:15:59.880 --> 00:16:01.740
+I described in that bonus round
+
+00:16:01.740 --> 00:16:03.959
+but in general
+
+00:16:03.959 --> 00:16:05.699
+with all these terms flying around like
+
+00:16:05.699 --> 00:16:07.680
+fixed effects and varying effects Don't
+
+00:16:07.680 --> 00:16:08.720
+Panic
+
+00:16:08.720 --> 00:16:11.100
+draw your assumptions make the
+
+00:16:11.100 --> 00:16:13.800
+generative model and focus on that to
+
+00:16:13.800 --> 00:16:15.120
+get your thinking straight first and
+
+00:16:15.120 --> 00:16:16.199
+worrying about the worry about the
+
+00:16:16.199 --> 00:16:19.199
+estimator later because most of the big
+
+00:16:19.199 --> 00:16:21.120
+problems in research are about getting
+
+00:16:21.120 --> 00:16:24.680
+the story straight yeah
+
+00:16:25.079 --> 00:16:27.839
+okay lots of practical difficulties and
+
+00:16:27.839 --> 00:16:29.160
+that's sort of what we're focusing on
+
+00:16:29.160 --> 00:16:31.860
+here varying effects are great as a
+
+00:16:31.860 --> 00:16:34.440
+default I often tell people that
+
+00:16:34.440 --> 00:16:36.300
+um we shouldn't be making excuses to use
+
+00:16:36.300 --> 00:16:37.500
+varying effects we should be making
+
+00:16:37.500 --> 00:16:40.199
+excuses not to and sometimes there are
+
+00:16:40.199 --> 00:16:43.320
+good excuses not to
+
+00:16:43.320 --> 00:16:44.759
+um and sometimes it's the Practical
+
+00:16:44.759 --> 00:16:46.680
+difficulties for example how do we use
+
+00:16:46.680 --> 00:16:49.380
+more than one cluster at the same time
+
+00:16:49.380 --> 00:16:52.980
+and as I told you you duplicate but it's
+
+00:16:52.980 --> 00:16:55.620
+easier said than done in many cases you
+
+00:16:55.620 --> 00:16:57.180
+need examples if you're going to make
+
+00:16:57.180 --> 00:16:59.639
+progress there calculating predictions
+
+00:16:59.639 --> 00:17:01.920
+with varying effects gets trickier
+
+00:17:01.920 --> 00:17:03.660
+because now you have to talk about at
+
+00:17:03.660 --> 00:17:05.220
+what level you're making predictions are
+
+00:17:05.220 --> 00:17:07.500
+you making predictions for whole new
+
+00:17:07.500 --> 00:17:09.360
+clusters or are you making predictions
+
+00:17:09.360 --> 00:17:12.959
+for new elements inside of previously
+
+00:17:12.959 --> 00:17:14.819
+experienced clusters and those are
+
+00:17:14.819 --> 00:17:17.040
+really different kinds of predictions
+
+00:17:17.040 --> 00:17:18.600
+I'm going to say that again because I
+
+00:17:18.600 --> 00:17:21.120
+know this is weird
+
+00:17:21.120 --> 00:17:23.760
+so imagine we were making a prediction
+
+00:17:23.760 --> 00:17:28.079
+for a new tadpole in an existing context
+
+00:17:28.079 --> 00:17:30.240
+that we had varying effect estimates for
+
+00:17:30.240 --> 00:17:32.100
+that's a different kind of prediction
+
+00:17:32.100 --> 00:17:35.600
+task than making predictions for new
+
+00:17:35.600 --> 00:17:38.580
+unobserved tanks that tadpoles might
+
+00:17:38.580 --> 00:17:41.220
+appear in yeah we need to use different
+
+00:17:41.220 --> 00:17:43.260
+parameters from the models to make those
+
+00:17:43.260 --> 00:17:46.280
+different kinds of predictions
+
+00:17:46.440 --> 00:17:48.840
+and then there's just this issue of
+
+00:17:48.840 --> 00:17:50.760
+drawing the owl how do we get the change
+
+00:17:50.760 --> 00:17:52.620
+to sample efficiently and as you make
+
+00:17:52.620 --> 00:17:55.620
+models more complicated this gets harder
+
+00:17:55.620 --> 00:17:58.860
+but don't worry I am here you don't have
+
+00:17:58.860 --> 00:18:02.460
+to go alone and I'll show you the tricks
+
+00:18:02.460 --> 00:18:05.100
+uh fourth uh group level confounding
+
+00:18:05.100 --> 00:18:08.039
+this is a real threat in models and it's
+
+00:18:08.039 --> 00:18:10.080
+often ignored in the varying effects
+
+00:18:10.080 --> 00:18:11.940
+literature uh it's something to really
+
+00:18:11.940 --> 00:18:14.220
+think about and as I said in the bonus
+
+00:18:14.220 --> 00:18:16.559
+round from last week I showed you one
+
+00:18:16.559 --> 00:18:18.059
+effective way to deal with this that's
+
+00:18:18.059 --> 00:18:19.799
+essentially equivalent to the fixed
+
+00:18:19.799 --> 00:18:22.640
+effect approach
+
+00:18:23.580 --> 00:18:26.880
+the example I want to stick with in this
+
+00:18:26.880 --> 00:18:30.240
+lecture and the next is the 1989
+
+00:18:30.240 --> 00:18:33.179
+Bangladesh fertility survey so
+
+00:18:33.179 --> 00:18:35.700
+Bangladesh is a very densely populated
+
+00:18:35.700 --> 00:18:39.140
+country and in the 1980s a typical woman
+
+00:18:39.140 --> 00:18:41.700
+by the time she finished her
+
+00:18:41.700 --> 00:18:44.100
+reproduction would have had seven or
+
+00:18:44.100 --> 00:18:47.039
+eight kids I think that was the median
+
+00:18:47.039 --> 00:18:49.260
+and these days it's around two
+
+00:18:49.260 --> 00:18:51.539
+so there's been a radical demographic
+
+00:18:51.539 --> 00:18:54.080
+change in the last decades
+
+00:18:54.080 --> 00:18:56.580
+in Bangladesh as in many parts of the
+
+00:18:56.580 --> 00:19:01.080
+world much of Asia and there are many
+
+00:19:01.080 --> 00:19:04.020
+good reasons to study this change both
+
+00:19:04.020 --> 00:19:07.020
+descriptively and causally descriptively
+
+00:19:07.020 --> 00:19:09.120
+because countries need to understand
+
+00:19:09.120 --> 00:19:10.980
+what's happening to them so that they
+
+00:19:10.980 --> 00:19:13.080
+can plan appropriately and causally
+
+00:19:13.080 --> 00:19:14.880
+because as human scientists we want to
+
+00:19:14.880 --> 00:19:17.760
+understand why this happened
+
+00:19:17.760 --> 00:19:20.520
+so I'm going to give you a relatively
+
+00:19:20.520 --> 00:19:22.020
+modest data set here that's in the
+
+00:19:22.020 --> 00:19:25.080
+rethinking package data Bangladesh it's
+
+00:19:25.080 --> 00:19:26.000
+a
+
+00:19:26.000 --> 00:19:29.460
+1934 women from 61 districts in
+
+00:19:29.460 --> 00:19:33.600
+Bangladesh and Bangladesh's is a highly
+
+00:19:33.600 --> 00:19:36.660
+variable place with cities and rural
+
+00:19:36.660 --> 00:19:39.480
+areas and the outcome we're going to be
+
+00:19:39.480 --> 00:19:42.179
+interested in is contraceptive use this
+
+00:19:42.179 --> 00:19:45.419
+was a survey in the 1980s late 1980s of
+
+00:19:45.419 --> 00:19:47.960
+contraceptive use when it was just being
+
+00:19:47.960 --> 00:19:51.900
+heavily pushed by the by the government
+
+00:19:51.900 --> 00:19:53.580
+we have some other variables we're going
+
+00:19:53.580 --> 00:19:55.080
+to think about too just to make this
+
+00:19:55.080 --> 00:19:58.380
+spicy the age of the woman that was
+
+00:19:58.380 --> 00:20:00.480
+interviewed how many living children she
+
+00:20:00.480 --> 00:20:03.900
+had at the time and whether the her
+
+00:20:03.900 --> 00:20:06.600
+location within the district is urban or
+
+00:20:06.600 --> 00:20:09.020
+rural
+
+00:20:10.200 --> 00:20:14.039
+so lots of people request more advice
+
+00:20:14.039 --> 00:20:16.140
+about how to draw Dax this is extremely
+
+00:20:16.140 --> 00:20:19.919
+common so and my response is always well
+
+00:20:19.919 --> 00:20:21.960
+you need domain expertise and that's
+
+00:20:21.960 --> 00:20:23.820
+true but I think there are some
+
+00:20:23.820 --> 00:20:25.440
+heuristics as well that can help so let
+
+00:20:25.440 --> 00:20:28.140
+me let me try with this case to show you
+
+00:20:28.140 --> 00:20:30.419
+how I would go about trying to trying to
+
+00:20:30.419 --> 00:20:32.039
+draw a Jag with just these variables of
+
+00:20:32.039 --> 00:20:33.059
+course there are other variables that
+
+00:20:33.059 --> 00:20:34.260
+matter but Hang on we're going to get
+
+00:20:34.260 --> 00:20:35.880
+there let's let's not punish ourselves
+
+00:20:35.880 --> 00:20:38.220
+let's start simple so
+
+00:20:38.220 --> 00:20:40.080
+the variables we're going to nominate so
+
+00:20:40.080 --> 00:20:41.820
+far we've got contraceptive use that's
+
+00:20:41.820 --> 00:20:43.679
+our outcome of Interest we've got the
+
+00:20:43.679 --> 00:20:45.539
+age of the woman how many living kids
+
+00:20:45.539 --> 00:20:48.480
+she has her vanity I'm calling it does
+
+00:20:48.480 --> 00:20:51.360
+she live in an urban area or not uh or
+
+00:20:51.360 --> 00:20:52.679
+in principle you could make that a
+
+00:20:52.679 --> 00:20:54.600
+continuous variable how Urban is the
+
+00:20:54.600 --> 00:20:58.799
+space or distance from an urban center
+
+00:20:58.799 --> 00:21:00.900
+and then the district which is this
+
+00:21:00.900 --> 00:21:02.820
+variable which is just an index but
+
+00:21:02.820 --> 00:21:03.960
+remember
+
+00:21:03.960 --> 00:21:06.000
+we're interested in it because it's
+
+00:21:06.000 --> 00:21:07.860
+going to represent unmeasured things
+
+00:21:07.860 --> 00:21:09.360
+about districts
+
+00:21:09.360 --> 00:21:12.059
+that may affect all the women on all the
+
+00:21:12.059 --> 00:21:13.860
+families within them
+
+00:21:13.860 --> 00:21:16.440
+so first thing you do is focus on the
+
+00:21:16.440 --> 00:21:18.780
+cause of Interest what are the causes of
+
+00:21:18.780 --> 00:21:20.100
+Interest why are you doing this research
+
+00:21:20.100 --> 00:21:22.620
+at all and in this case we're going to
+
+00:21:22.620 --> 00:21:24.840
+think about the idea that we would like
+
+00:21:24.840 --> 00:21:27.960
+to add minimum describe the association
+
+00:21:27.960 --> 00:21:31.080
+between age and contraceptive use and uh
+
+00:21:31.080 --> 00:21:33.059
+and and family size and contraceptive
+
+00:21:33.059 --> 00:21:35.059
+use how many kids the woman has
+
+00:21:35.059 --> 00:21:37.620
+and possibly even estimate causal
+
+00:21:37.620 --> 00:21:41.640
+effects of these things although uh as
+
+00:21:41.640 --> 00:21:43.980
+we'll as we'll see that's that's not so
+
+00:21:43.980 --> 00:21:46.640
+easy to do
+
+00:21:47.340 --> 00:21:49.140
+um then there are competing causes other
+
+00:21:49.140 --> 00:21:51.780
+things that influence the outcome uh but
+
+00:21:51.780 --> 00:21:53.159
+we're that we're not necessarily
+
+00:21:53.159 --> 00:21:55.260
+directly interested in but that we may
+
+00:21:55.260 --> 00:21:57.900
+want to stratify by so we can get better
+
+00:21:57.900 --> 00:22:00.539
+estimates or deal with confounding so
+
+00:22:00.539 --> 00:22:02.659
+naturally the district
+
+00:22:02.659 --> 00:22:05.220
+May influence contraceptive use because
+
+00:22:05.220 --> 00:22:07.380
+there may be many things about the
+
+00:22:07.380 --> 00:22:09.299
+economy of a district or its resources
+
+00:22:09.299 --> 00:22:10.919
+or its population density or its
+
+00:22:10.919 --> 00:22:12.360
+cultural history which may also
+
+00:22:12.360 --> 00:22:14.280
+influence the behavior of people in it
+
+00:22:14.280 --> 00:22:16.620
+and then Urban spaces and Rural spaces
+
+00:22:16.620 --> 00:22:19.380
+are quite different as well
+
+00:22:19.380 --> 00:22:20.520
+um and then there are relationships
+
+00:22:20.520 --> 00:22:25.260
+among those causes so in this case uh
+
+00:22:25.260 --> 00:22:27.720
+age nothing influences age this is a
+
+00:22:27.720 --> 00:22:28.799
+great thing about the variable age
+
+00:22:28.799 --> 00:22:30.419
+nothing influences it because it's just
+
+00:22:30.419 --> 00:22:32.880
+a clock and unless you have a time
+
+00:22:32.880 --> 00:22:34.620
+machine you don't have an arrow into age
+
+00:22:34.620 --> 00:22:37.140
+but age can influence other things like
+
+00:22:37.140 --> 00:22:38.460
+how many kids you have the longer you've
+
+00:22:38.460 --> 00:22:40.440
+been alive the more kids you can
+
+00:22:40.440 --> 00:22:41.820
+possibly have right
+
+00:22:41.820 --> 00:22:43.799
+and um
+
+00:22:43.799 --> 00:22:45.659
+Urban living may also influence kids
+
+00:22:45.659 --> 00:22:48.080
+because of the cost of them
+
+00:22:48.080 --> 00:22:51.179
+and the district you're in again could
+
+00:22:51.179 --> 00:22:53.280
+easily influence Urban living because
+
+00:22:53.280 --> 00:22:55.080
+some districts don't have cities
+
+00:22:55.080 --> 00:22:58.140
+yeah you could draw more arrows here I'm
+
+00:22:58.140 --> 00:22:59.580
+not making a strong argument for this
+
+00:22:59.580 --> 00:23:01.080
+particular diagram I'm trying to
+
+00:23:01.080 --> 00:23:02.940
+stimulate your imagination but I think
+
+00:23:02.940 --> 00:23:04.679
+these relationships are a plausible
+
+00:23:04.679 --> 00:23:06.659
+start so that we can do something useful
+
+00:23:06.659 --> 00:23:09.860
+and educational
+
+00:23:09.860 --> 00:23:12.179
+there are also unfortunate relationships
+
+00:23:12.179 --> 00:23:13.440
+you shouldn't just draw the stuff that's
+
+00:23:13.440 --> 00:23:16.260
+easy for you imagine imagine the
+
+00:23:16.260 --> 00:23:18.559
+haunting imagine the ghosts in the dark
+
+00:23:18.559 --> 00:23:20.820
+so for example here's a group level
+
+00:23:20.820 --> 00:23:22.679
+confound the unmeasured things about
+
+00:23:22.679 --> 00:23:24.600
+districts may also influence features of
+
+00:23:24.600 --> 00:23:26.880
+individuals in those districts not just
+
+00:23:26.880 --> 00:23:28.559
+the group level variables like whether
+
+00:23:28.559 --> 00:23:30.539
+there are cities so for example there
+
+00:23:30.539 --> 00:23:32.100
+may be things about the history of
+
+00:23:32.100 --> 00:23:33.900
+particular districts which influence
+
+00:23:33.900 --> 00:23:36.179
+family size it could be the ethnic
+
+00:23:36.179 --> 00:23:39.980
+composition of that district for example
+
+00:23:40.080 --> 00:23:41.700
+um and then imagine stuff you haven't
+
+00:23:41.700 --> 00:23:44.640
+measured that may also uh haunt you so
+
+00:23:44.640 --> 00:23:48.059
+in this case uh um families can be quite
+
+00:23:48.059 --> 00:23:51.240
+large and remember I said in the in
+
+00:23:51.240 --> 00:23:53.400
+around 1980 a typical woman would have
+
+00:23:53.400 --> 00:23:55.679
+had seven or eight kids so they're going
+
+00:23:55.679 --> 00:23:57.659
+to be a bunch of sisters within a family
+
+00:23:57.659 --> 00:24:00.299
+and they may be similar in contraceptive
+
+00:24:00.299 --> 00:24:02.400
+use and their family sizes because of
+
+00:24:02.400 --> 00:24:04.679
+common socialization this is another
+
+00:24:04.679 --> 00:24:06.780
+kind of cluster variable but if we don't
+
+00:24:06.780 --> 00:24:08.480
+have it in the data set
+
+00:24:08.480 --> 00:24:13.520
+then it could be a confound
+
+00:24:14.480 --> 00:24:17.460
+okay let's get started uh Don't Panic
+
+00:24:17.460 --> 00:24:18.840
+we're going to start real simple and
+
+00:24:18.840 --> 00:24:20.820
+build up one step at a time and we're
+
+00:24:20.820 --> 00:24:23.400
+just going to think about building the
+
+00:24:23.400 --> 00:24:26.940
+tadpole level version of this data set
+
+00:24:26.940 --> 00:24:28.440
+and what I mean by that is we're just
+
+00:24:28.440 --> 00:24:30.240
+going to Cluster by district and
+
+00:24:30.240 --> 00:24:32.760
+describe the variation and contraceptive
+
+00:24:32.760 --> 00:24:34.380
+use by district and this is already a
+
+00:24:34.380 --> 00:24:35.940
+lot to do and there's lots of advanced
+
+00:24:35.940 --> 00:24:38.179
+statistical Machinery already in this
+
+00:24:38.179 --> 00:24:40.559
+so we don't need to push too much harder
+
+00:24:40.559 --> 00:24:43.679
+until we've got this done and often when
+
+00:24:43.679 --> 00:24:45.120
+you're doing a data analysis on a
+
+00:24:45.120 --> 00:24:46.860
+structured data set like this this is
+
+00:24:46.860 --> 00:24:48.240
+always the place to start get your
+
+00:24:48.240 --> 00:24:50.940
+varying effect structure in place get it
+
+00:24:50.940 --> 00:24:53.100
+to work right because there's often some
+
+00:24:53.100 --> 00:24:55.260
+tinkering to do as I'll show you and
+
+00:24:55.260 --> 00:24:57.720
+then worry about the causal effects uh
+
+00:24:57.720 --> 00:25:00.780
+second but whatever you do never try to
+
+00:25:00.780 --> 00:25:03.419
+go to the end point and put all of the
+
+00:25:03.419 --> 00:25:05.039
+variables in you think you need you've
+
+00:25:05.039 --> 00:25:06.240
+got to build it one step at a time
+
+00:25:06.240 --> 00:25:07.820
+because something's not going to work
+
+00:25:07.820 --> 00:25:10.140
+and if you've done it all at once you
+
+00:25:10.140 --> 00:25:11.940
+won't know what's not working
+
+00:25:11.940 --> 00:25:13.919
+one step at a time test and keep going
+
+00:25:13.919 --> 00:25:16.740
+so our s demand is very modest right now
+
+00:25:16.740 --> 00:25:18.600
+it's just contraceptive use in each
+
+00:25:18.600 --> 00:25:20.100
+district and we're going to use partial
+
+00:25:20.100 --> 00:25:21.600
+pooling and you'll see that's be
+
+00:25:21.600 --> 00:25:24.059
+necessary for the survey because the
+
+00:25:24.059 --> 00:25:26.159
+coverage is not very uniform and in some
+
+00:25:26.159 --> 00:25:28.880
+districts there just isn't a lot of data
+
+00:25:28.880 --> 00:25:30.840
+so we're going to estimate a varying
+
+00:25:30.840 --> 00:25:33.659
+intercept on each district and this
+
+00:25:33.659 --> 00:25:35.640
+really from my perspective is just
+
+00:25:35.640 --> 00:25:36.779
+another chance to help you understand
+
+00:25:36.779 --> 00:25:39.000
+partial pooling because let's face it
+
+00:25:39.000 --> 00:25:41.279
+it's weird
+
+00:25:41.279 --> 00:25:43.860
+here's the model we want this has the
+
+00:25:43.860 --> 00:25:45.659
+same structure as the tadpole model from
+
+00:25:45.659 --> 00:25:47.340
+last week
+
+00:25:47.340 --> 00:25:49.620
+but still uh let's remember I want to
+
+00:25:49.620 --> 00:25:51.120
+remind you of the pieces and what they
+
+00:25:51.120 --> 00:25:54.659
+mean the first line This is the uh prior
+
+00:25:54.659 --> 00:25:57.179
+for The observed outcome variable right
+
+00:25:57.179 --> 00:25:59.279
+there's Bernoulli with some constant
+
+00:25:59.279 --> 00:26:02.100
+rate P sub I or P sub I as a function of
+
+00:26:02.100 --> 00:26:05.059
+the of the log odds parameter Alpha
+
+00:26:05.059 --> 00:26:08.340
+which is the log odds of contraceptive
+
+00:26:08.340 --> 00:26:10.559
+use in each district
+
+00:26:10.559 --> 00:26:13.020
+and then we have our regularizing prior
+
+00:26:13.020 --> 00:26:15.120
+for districts this is a prior with
+
+00:26:15.120 --> 00:26:16.860
+parameters inside of it and that's the
+
+00:26:16.860 --> 00:26:18.299
+third line of this model these are the
+
+00:26:18.299 --> 00:26:20.100
+alpha J's
+
+00:26:20.100 --> 00:26:23.460
+um and then Alpha bar is the average
+
+00:26:23.460 --> 00:26:25.440
+District the law gods of contraceptive
+
+00:26:25.440 --> 00:26:27.419
+using the average district and sigma is
+
+00:26:27.419 --> 00:26:32.179
+the standard deviation among districts
+
+00:26:33.539 --> 00:26:36.600
+here's the code this looks uh very much
+
+00:26:36.600 --> 00:26:39.779
+like that the code from last week uh
+
+00:26:39.779 --> 00:26:41.940
+however I want to call your attention to
+
+00:26:41.940 --> 00:26:43.980
+just one thing
+
+00:26:43.980 --> 00:26:47.640
+um and we'll get to it in a moment so
+
+00:26:47.640 --> 00:26:50.580
+the top line is not new at all this is
+
+00:26:50.580 --> 00:26:52.320
+our Bernoulli outcome a zero one outcome
+
+00:26:52.320 --> 00:26:53.820
+for contraception because that's the way
+
+00:26:53.820 --> 00:26:56.880
+it was recorded then we have our link
+
+00:26:56.880 --> 00:26:59.880
+function logit for the probability and
+
+00:26:59.880 --> 00:27:03.240
+we have a it's our log odds bracketed by
+
+00:27:03.240 --> 00:27:06.020
+District D and then here's the new bit
+
+00:27:06.020 --> 00:27:08.700
+I'm defining
+
+00:27:08.700 --> 00:27:11.279
+the vector a not by bracketing with d
+
+00:27:11.279 --> 00:27:13.320
+but by explicitly declaring its length
+
+00:27:13.320 --> 00:27:15.960
+at 61. there are 61 districts in this
+
+00:27:15.960 --> 00:27:17.100
+survey
+
+00:27:17.100 --> 00:27:19.980
+but not all of them were surveyed and so
+
+00:27:19.980 --> 00:27:21.740
+for some of them you don't have any data
+
+00:27:21.740 --> 00:27:24.299
+and so if you bracket by D in that case
+
+00:27:24.299 --> 00:27:26.159
+you're going to end up with an error and
+
+00:27:26.159 --> 00:27:28.260
+I wanted to save you from that problem
+
+00:27:28.260 --> 00:27:30.799
+but otherwise
+
+00:27:30.799 --> 00:27:33.179
+it's all the same you've got a bar and
+
+00:27:33.179 --> 00:27:36.179
+sigma inside the normal and then the
+
+00:27:36.179 --> 00:27:38.820
+priors for those two parameters those
+
+00:27:38.820 --> 00:27:40.140
+parameters are often called hyper
+
+00:27:40.140 --> 00:27:41.580
+parameters hyper parameters are
+
+00:27:41.580 --> 00:27:46.020
+parameters that determine other priors
+
+00:27:46.020 --> 00:27:48.840
+uh it's a weird thing I know
+
+00:27:48.840 --> 00:27:51.419
+and then Sigma exponential
+
+00:27:51.419 --> 00:27:53.640
+run this model you will not encounter
+
+00:27:53.640 --> 00:27:55.740
+any difficulties and it samples
+
+00:27:55.740 --> 00:27:58.140
+extremely efficiently but you do get a
+
+00:27:58.140 --> 00:28:01.320
+terrifying number of parameters as you
+
+00:28:01.320 --> 00:28:04.799
+see it's not either 60 63 parameters in
+
+00:28:04.799 --> 00:28:07.220
+this model it's really not that much
+
+00:28:07.220 --> 00:28:10.020
+compared to things that we could do but
+
+00:28:10.020 --> 00:28:11.100
+it's not the kind of thing you just
+
+00:28:11.100 --> 00:28:13.020
+stare at the out at the coefficient
+
+00:28:13.020 --> 00:28:15.720
+table and understand right as always we
+
+00:28:15.720 --> 00:28:17.220
+need to push out predictions and
+
+00:28:17.220 --> 00:28:18.600
+understand from the posterior
+
+00:28:18.600 --> 00:28:21.000
+predictions what the model thinks
+
+00:28:21.000 --> 00:28:24.600
+so the foreground that you have to
+
+00:28:24.600 --> 00:28:27.240
+appreciate the variation in
+
+00:28:27.240 --> 00:28:29.039
+in
+
+00:28:29.039 --> 00:28:30.720
+the amount of sampling that was done in
+
+00:28:30.720 --> 00:28:32.580
+each district some of the districts
+
+00:28:32.580 --> 00:28:36.179
+there are as almost 120 women sampled
+
+00:28:36.179 --> 00:28:38.460
+like District One
+
+00:28:38.460 --> 00:28:40.740
+and in other districts there are very
+
+00:28:40.740 --> 00:28:42.659
+few like District three I think that's
+
+00:28:42.659 --> 00:28:45.559
+two women sampled in District three
+
+00:28:45.559 --> 00:28:48.600
+District 49 has three women for example
+
+00:28:48.600 --> 00:28:52.080
+and poor District 54 has none they're
+
+00:28:52.080 --> 00:28:54.059
+definitely women living in District 54
+
+00:28:54.059 --> 00:28:57.240
+but none of them wanted to talk to a
+
+00:28:57.240 --> 00:28:59.419
+fertility researcher
+
+00:28:59.419 --> 00:29:01.919
+this variation is the sort of situation
+
+00:29:01.919 --> 00:29:03.840
+where partial pooling is a huge help
+
+00:29:03.840 --> 00:29:05.520
+because there's much more evidence for
+
+00:29:05.520 --> 00:29:07.260
+some districts and so we can be very
+
+00:29:07.260 --> 00:29:09.360
+confident about estimates there but
+
+00:29:09.360 --> 00:29:12.059
+there's much less in others
+
+00:29:12.059 --> 00:29:13.980
+so let's think about posterior
+
+00:29:13.980 --> 00:29:15.480
+predictions and I'm going to layer them
+
+00:29:15.480 --> 00:29:18.659
+on let's here's the raw data these
+
+00:29:18.659 --> 00:29:21.899
+blacks excuse me black circles
+
+00:29:21.899 --> 00:29:25.140
+are calculated just by taking the number
+
+00:29:25.140 --> 00:29:26.940
+of women who reported using
+
+00:29:26.940 --> 00:29:28.860
+contraception in each district to the
+
+00:29:28.860 --> 00:29:30.600
+districts are arranged on the horizontal
+
+00:29:30.600 --> 00:29:33.380
+axis from 1 to 61
+
+00:29:33.380 --> 00:29:35.880
+and dividing that by the number of women
+
+00:29:35.880 --> 00:29:38.940
+who responded at all uh in in each
+
+00:29:38.940 --> 00:29:40.500
+district and then you get a proportion
+
+00:29:40.500 --> 00:29:42.659
+reporting and that's what these black
+
+00:29:42.659 --> 00:29:44.940
+circles are
+
+00:29:44.940 --> 00:29:45.659
+um
+
+00:29:45.659 --> 00:29:47.760
+as you can see for example that in
+
+00:29:47.760 --> 00:29:49.320
+District three all of the women who
+
+00:29:49.320 --> 00:29:51.720
+responded which I think is two reported
+
+00:29:51.720 --> 00:29:54.620
+using contraception
+
+00:29:55.020 --> 00:29:57.299
+and then we put on the posterior means
+
+00:29:57.299 --> 00:30:00.000
+for each district these are the partial
+
+00:30:00.000 --> 00:30:02.940
+pooling estimates uh just the posterior
+
+00:30:02.940 --> 00:30:05.100
+means of for each and as you should
+
+00:30:05.100 --> 00:30:06.720
+expect by now just like in the tadpole
+
+00:30:06.720 --> 00:30:08.399
+example they're shrunk towards the mean
+
+00:30:08.399 --> 00:30:10.679
+that's the effect of of pooling
+
+00:30:10.679 --> 00:30:12.419
+information across districts districts
+
+00:30:12.419 --> 00:30:14.340
+that don't have a lot of data get pooled
+
+00:30:14.340 --> 00:30:17.419
+more and then here are 89 percent
+
+00:30:17.419 --> 00:30:19.620
+posterior intervals to give you an idea
+
+00:30:19.620 --> 00:30:21.600
+that there's uncertainty about these we
+
+00:30:21.600 --> 00:30:24.659
+don't know the mean right there's still
+
+00:30:24.659 --> 00:30:26.279
+a lot of uncertainty in each of these
+
+00:30:26.279 --> 00:30:27.500
+cases
+
+00:30:27.500 --> 00:30:30.299
+and um
+
+00:30:30.299 --> 00:30:31.799
+want to spend a little bit of time
+
+00:30:31.799 --> 00:30:34.440
+studying this graph so you understand uh
+
+00:30:34.440 --> 00:30:37.080
+what we call shrinkage last time why
+
+00:30:37.080 --> 00:30:39.120
+some of these estimates have moved are
+
+00:30:39.120 --> 00:30:40.980
+some of the red circles which are the
+
+00:30:40.980 --> 00:30:43.860
+posterior means are very far away from
+
+00:30:43.860 --> 00:30:45.059
+the black circles which are the
+
+00:30:45.059 --> 00:30:47.580
+empirical means and others are right on
+
+00:30:47.580 --> 00:30:50.580
+top yeah and this has to do with well
+
+00:30:50.580 --> 00:30:52.860
+you guessed it how much data there is in
+
+00:30:52.860 --> 00:30:54.000
+each district
+
+00:30:54.000 --> 00:30:56.159
+so let's take some interesting cases
+
+00:30:56.159 --> 00:30:58.740
+here and just label the sample sizes so
+
+00:30:58.740 --> 00:31:00.840
+they're starting on the left for
+
+00:31:00.840 --> 00:31:03.179
+district three only two women responded
+
+00:31:03.179 --> 00:31:04.679
+that's where that 2 is on the black
+
+00:31:04.679 --> 00:31:06.899
+circle and you'll see that the model is
+
+00:31:06.899 --> 00:31:08.520
+not fooled by this it is not at all
+
+00:31:08.520 --> 00:31:09.500
+confident
+
+00:31:09.500 --> 00:31:12.659
+that all women in District 3 use
+
+00:31:12.659 --> 00:31:14.159
+contraception right it would be a
+
+00:31:14.159 --> 00:31:15.960
+foolish model if you thought so
+
+00:31:15.960 --> 00:31:18.240
+yeah however if you used a fixed effects
+
+00:31:18.240 --> 00:31:21.679
+model that's what it would think
+
+00:31:21.679 --> 00:31:24.960
+and then on moving from left to right
+
+00:31:24.960 --> 00:31:27.899
+we've got some districts with really low
+
+00:31:27.899 --> 00:31:31.380
+reported use uh 10 and 11 and they all
+
+00:31:31.380 --> 00:31:34.140
+they have modest sample sizes as well
+
+00:31:34.140 --> 00:31:35.880
+and their estimates are shrunk towards
+
+00:31:35.880 --> 00:31:37.679
+the mean so the model does not think
+
+00:31:37.679 --> 00:31:40.020
+that almost no one uses contraception in
+
+00:31:40.020 --> 00:31:43.679
+those districts again for there's a low
+
+00:31:43.679 --> 00:31:45.840
+one has 14 observations there in the
+
+00:31:45.840 --> 00:31:48.659
+middle and all the way far on the right
+
+00:31:48.659 --> 00:31:50.000
+you'll see the ones at the bottom
+
+00:31:50.000 --> 00:31:55.500
+District 49 only four women and
+
+00:31:55.620 --> 00:31:57.779
+and then one with six and one with ten
+
+00:31:57.779 --> 00:32:00.120
+I've highlighted also a couple districts
+
+00:32:00.120 --> 00:32:03.120
+that have large sample sizes and have
+
+00:32:03.120 --> 00:32:07.320
+sort of pulled their District level
+
+00:32:07.320 --> 00:32:09.600
+estimates up above the mean and you'll
+
+00:32:09.600 --> 00:32:11.460
+see those labeled with the 35 sample
+
+00:32:11.460 --> 00:32:14.039
+size and the 45 sample size a bit more
+
+00:32:14.039 --> 00:32:15.419
+women in those districts use
+
+00:32:15.419 --> 00:32:17.340
+contraception than is typical in
+
+00:32:17.340 --> 00:32:20.399
+Bangladesh in 1989 but the model has
+
+00:32:20.399 --> 00:32:22.740
+been has agreed to be pulled up because
+
+00:32:22.740 --> 00:32:24.179
+there's more weight of evidence in those
+
+00:32:24.179 --> 00:32:25.860
+cases
+
+00:32:25.860 --> 00:32:27.600
+okay the point here is just to
+
+00:32:27.600 --> 00:32:30.179
+understand that all of this is logical
+
+00:32:30.179 --> 00:32:32.100
+right the model is just following the
+
+00:32:32.100 --> 00:32:34.080
+logic the probability Theory and doing
+
+00:32:34.080 --> 00:32:37.260
+what's necessary and that's why the
+
+00:32:37.260 --> 00:32:39.360
+shrinkage happens and it's also why
+
+00:32:39.360 --> 00:32:42.080
+sometimes it doesn't
+
+00:32:42.360 --> 00:32:45.120
+interesting case is this District right
+
+00:32:45.120 --> 00:32:46.799
+over here and you'll notice there's no
+
+00:32:46.799 --> 00:32:48.840
+black dot in this column where I've
+
+00:32:48.840 --> 00:32:50.880
+marked no data because that's the
+
+00:32:50.880 --> 00:32:54.659
+district I think it was 49 where there's
+
+00:32:54.659 --> 00:32:57.299
+um no data at all so not 49 must be 50
+
+00:32:57.299 --> 00:33:00.539
+something 54 something like that where
+
+00:33:00.539 --> 00:33:02.700
+there's no data at all nevertheless
+
+00:33:02.700 --> 00:33:04.559
+there's a posterior distribution for it
+
+00:33:04.559 --> 00:33:07.080
+yeah remember the minimum sample size
+
+00:33:07.080 --> 00:33:10.440
+for Bayesian analysis is zero because
+
+00:33:10.440 --> 00:33:11.700
+you have a prior
+
+00:33:11.700 --> 00:33:13.519
+in this case
+
+00:33:13.519 --> 00:33:15.960
+this is an informed prior because it's
+
+00:33:15.960 --> 00:33:17.279
+been estimated from all the other
+
+00:33:17.279 --> 00:33:20.700
+districts and so that estimate the
+
+00:33:20.700 --> 00:33:22.679
+posterior mean at the red circle and the
+
+00:33:22.679 --> 00:33:24.779
+89 interval
+
+00:33:24.779 --> 00:33:26.760
+for the district where we have no data
+
+00:33:26.760 --> 00:33:29.760
+is in his in essence a prediction that
+
+00:33:29.760 --> 00:33:32.039
+comes from that has been educated by the
+
+00:33:32.039 --> 00:33:34.140
+data from all the other districts but
+
+00:33:34.140 --> 00:33:36.659
+but it's not it it's not that it thinks
+
+00:33:36.659 --> 00:33:40.080
+that this District must be like uh all
+
+00:33:40.080 --> 00:33:41.460
+the other districts it uses the
+
+00:33:41.460 --> 00:33:43.200
+variation as well because remember we're
+
+00:33:43.200 --> 00:33:45.000
+estimating that Sigma parameter the
+
+00:33:45.000 --> 00:33:46.679
+variance among districts and that's why
+
+00:33:46.679 --> 00:33:49.440
+it's a bit wider as you can see than the
+
+00:33:49.440 --> 00:33:52.620
+typical District the the pink band is
+
+00:33:52.620 --> 00:33:54.000
+wider than it is for most other
+
+00:33:54.000 --> 00:33:56.480
+districts
+
+00:33:58.500 --> 00:34:01.980
+okay that's partial pooling and it uh
+
+00:34:01.980 --> 00:34:03.419
+after a while you get really used to it
+
+00:34:03.419 --> 00:34:05.580
+and you come to expect it and one of the
+
+00:34:05.580 --> 00:34:08.339
+funny things about it of course is that
+
+00:34:08.339 --> 00:34:12.179
+it's a reason that we um don't expect uh
+
+00:34:12.179 --> 00:34:14.040
+the model to we don't want the model
+
+00:34:14.040 --> 00:34:16.560
+predictions to exactly recapitulate the
+
+00:34:16.560 --> 00:34:18.839
+sample I'll say that again we don't
+
+00:34:18.839 --> 00:34:21.060
+usually want the posterior predictions
+
+00:34:21.060 --> 00:34:23.159
+of the model to exactly recapitulate the
+
+00:34:23.159 --> 00:34:24.780
+sample because remember there are
+
+00:34:24.780 --> 00:34:26.040
+features of the sample which are not
+
+00:34:26.040 --> 00:34:27.300
+regular
+
+00:34:27.300 --> 00:34:30.179
+and we're trying to regularize
+
+00:34:30.179 --> 00:34:33.119
+so that's why we use this approach
+
+00:34:33.119 --> 00:34:35.820
+note we have done no inference yet so we
+
+00:34:35.820 --> 00:34:37.740
+can think about that next
+
+00:34:37.740 --> 00:34:39.919
+what about Urban living
+
+00:34:39.919 --> 00:34:43.139
+Urban spaces impose different economic
+
+00:34:43.139 --> 00:34:46.440
+costs some people and crowding and there
+
+00:34:46.440 --> 00:34:48.240
+are cultural effects of urban living as
+
+00:34:48.240 --> 00:34:51.839
+well and opportunities for labor which
+
+00:34:51.839 --> 00:34:53.580
+compete with reproduction and so on
+
+00:34:53.580 --> 00:34:55.159
+there are many many theories about this
+
+00:34:55.159 --> 00:34:58.560
+but typically urban populations have
+
+00:34:58.560 --> 00:35:01.320
+smaller family sizes and greater uptick
+
+00:35:01.320 --> 00:35:03.359
+of contraception than rural populations
+
+00:35:03.359 --> 00:35:05.880
+so let's take a look at this is it can
+
+00:35:05.880 --> 00:35:07.560
+we at least describe the association
+
+00:35:07.560 --> 00:35:09.780
+between urban living and Bangladesh
+
+00:35:09.780 --> 00:35:12.960
+Bangladesh in 1989 and contraceptive use
+
+00:35:12.960 --> 00:35:15.060
+and and maybe squint really hard at it
+
+00:35:15.060 --> 00:35:16.619
+and convince ourselves it's a causal
+
+00:35:16.619 --> 00:35:18.800
+effect
+
+00:35:19.380 --> 00:35:22.440
+um the issue here right away is that
+
+00:35:22.440 --> 00:35:23.940
+District features our potential group
+
+00:35:23.940 --> 00:35:26.339
+level compounds different districts have
+
+00:35:26.339 --> 00:35:28.440
+different levels of Urban Development
+
+00:35:28.440 --> 00:35:32.460
+and so we need to um also stratify by
+
+00:35:32.460 --> 00:35:34.020
+district and we want those varying
+
+00:35:34.020 --> 00:35:36.240
+effects in place
+
+00:35:36.240 --> 00:35:37.140
+um
+
+00:35:37.140 --> 00:35:39.780
+ideally we'd uh use the munlock machine
+
+00:35:39.780 --> 00:35:41.640
+that I talked about before but I don't
+
+00:35:41.640 --> 00:35:43.560
+want to over complicate this example so
+
+00:35:43.560 --> 00:35:44.880
+if you're interested in that you can go
+
+00:35:44.880 --> 00:35:46.859
+back to that bonus round and and take a
+
+00:35:46.859 --> 00:35:48.960
+look
+
+00:35:48.960 --> 00:35:51.980
+the total effect of
+
+00:35:51.980 --> 00:35:54.780
+of U or variable U which indicates how
+
+00:35:54.780 --> 00:35:56.940
+Urban uh the place where the woman lives
+
+00:35:56.940 --> 00:36:00.960
+passes also through K Kids uh in my dag
+
+00:36:00.960 --> 00:36:03.060
+you see that it's got a direct effect
+
+00:36:03.060 --> 00:36:05.520
+and an indirect effect
+
+00:36:05.520 --> 00:36:08.700
+um so this is just a reminder you don't
+
+00:36:08.700 --> 00:36:10.079
+want to just throw everything into the
+
+00:36:10.079 --> 00:36:11.640
+same model you got to think about which
+
+00:36:11.640 --> 00:36:13.920
+estimate you're using and only use the
+
+00:36:13.920 --> 00:36:16.200
+right adjustments after that if you did
+
+00:36:16.200 --> 00:36:18.900
+stratify by kids you would block part
+
+00:36:18.900 --> 00:36:22.140
+perhaps most of the causal effect of
+
+00:36:22.140 --> 00:36:24.680
+urban living
+
+00:36:25.740 --> 00:36:27.320
+here's the model
+
+00:36:27.320 --> 00:36:29.760
+there's a lot of choices about how to
+
+00:36:29.760 --> 00:36:31.920
+parameterize this and I'm going to
+
+00:36:31.920 --> 00:36:34.500
+choose one that I think is is the most
+
+00:36:34.500 --> 00:36:36.300
+broadly useful because it's a structure
+
+00:36:36.300 --> 00:36:37.859
+that lots of people use when they make
+
+00:36:37.859 --> 00:36:40.260
+these sorts of models and that is to add
+
+00:36:40.260 --> 00:36:44.220
+a slope if you will so you sub I in the
+
+00:36:44.220 --> 00:36:45.900
+data set I've given you is is an
+
+00:36:45.900 --> 00:36:48.180
+indicator variable it's zero when the
+
+00:36:48.180 --> 00:36:50.400
+woman does not live in a city and it's
+
+00:36:50.400 --> 00:36:52.260
+one when she does and we're going to
+
+00:36:52.260 --> 00:36:53.579
+have a coefficient in front of that
+
+00:36:53.579 --> 00:36:56.820
+indicator uh Beta And there's going to
+
+00:36:56.820 --> 00:36:58.520
+be a different beta for each district
+
+00:36:58.520 --> 00:37:02.579
+yeah so it's a whole new Vector of
+
+00:37:02.579 --> 00:37:04.079
+parameters because we're going to let
+
+00:37:04.079 --> 00:37:06.780
+the effective Urban living vary
+
+00:37:06.780 --> 00:37:08.700
+so the variable use of I effectively
+
+00:37:08.700 --> 00:37:11.040
+just turns on beta on different lines
+
+00:37:11.040 --> 00:37:12.359
+for different women depending upon
+
+00:37:12.359 --> 00:37:14.480
+whether they live in a city or not
+
+00:37:14.480 --> 00:37:17.640
+nothing changes for Alpha sub J we add
+
+00:37:17.640 --> 00:37:19.079
+beta sub J it's the same kind of
+
+00:37:19.079 --> 00:37:20.940
+structure we've got a beta bar which is
+
+00:37:20.940 --> 00:37:24.079
+the mean effect of urban living
+
+00:37:24.079 --> 00:37:27.359
+for across districts and then a scale
+
+00:37:27.359 --> 00:37:29.940
+parameter tau is that weird cute looking
+
+00:37:29.940 --> 00:37:33.839
+T there and tau is just like Sigma it
+
+00:37:33.839 --> 00:37:36.740
+just has a different name
+
+00:37:38.099 --> 00:37:41.400
+so uh Alpha sub J is is the regularizing
+
+00:37:41.400 --> 00:37:43.859
+prior for Rural beta sub J is the
+
+00:37:43.859 --> 00:37:45.960
+regularizing prior for the urban effect
+
+00:37:45.960 --> 00:37:49.140
+it's the difference between rural and
+
+00:37:49.140 --> 00:37:51.540
+urban uh contraception rates on logout
+
+00:37:51.540 --> 00:37:54.780
+scale within a particular District J
+
+00:37:54.780 --> 00:37:56.400
+and then we have the averages and the
+
+00:37:56.400 --> 00:37:59.040
+standard deviations as before
+
+00:37:59.040 --> 00:38:00.720
+so in a sense it's it's the same model
+
+00:38:00.720 --> 00:38:02.520
+we've just got some duplication and
+
+00:38:02.520 --> 00:38:04.619
+renaming that's been done and the code
+
+00:38:04.619 --> 00:38:06.839
+shows that I think quite clearly we have
+
+00:38:06.839 --> 00:38:09.300
+another Vector of Link 61 but it's named
+
+00:38:09.300 --> 00:38:12.060
+B and it's got its own mean and standard
+
+00:38:12.060 --> 00:38:14.220
+deviation
+
+00:38:14.220 --> 00:38:17.000
+okay when you run this
+
+00:38:17.000 --> 00:38:20.660
+not all is well you're likely to get
+
+00:38:20.660 --> 00:38:25.020
+some scary messages like this warning
+
+00:38:25.020 --> 00:38:27.359
+four of 2000 transitions ended with the
+
+00:38:27.359 --> 00:38:30.180
+Divergence and then there's a link never
+
+00:38:30.180 --> 00:38:32.520
+a good sign uh warning three or four
+
+00:38:32.520 --> 00:38:35.400
+chains had an e bfmi whatever that means
+
+00:38:35.400 --> 00:38:39.180
+less than 0.2 is that good it sounds bad
+
+00:38:39.180 --> 00:38:40.800
+there's a word warning in front and
+
+00:38:40.800 --> 00:38:43.940
+again there's a link never a good sign
+
+00:38:43.940 --> 00:38:46.260
+what's gone wrong here
+
+00:38:46.260 --> 00:38:49.560
+well actually the Markov chain is is
+
+00:38:49.560 --> 00:38:51.359
+fine in this particular case but it's
+
+00:38:51.359 --> 00:38:52.859
+worth paying attention to These Warnings
+
+00:38:52.859 --> 00:38:55.440
+because there's a way to fix them and
+
+00:38:55.440 --> 00:38:56.760
+when you fix them you'll have a lot more
+
+00:38:56.760 --> 00:38:58.920
+confidence uh that the estimates are
+
+00:38:58.920 --> 00:39:01.500
+good and it'll take less time to get
+
+00:39:01.500 --> 00:39:03.420
+them it'll make it more efficient
+
+00:39:03.420 --> 00:39:06.540
+if you look at the pricey output for
+
+00:39:06.540 --> 00:39:09.540
+this model you'll see that the NF the
+
+00:39:09.540 --> 00:39:11.579
+effective sample size and the r hats are
+
+00:39:11.579 --> 00:39:15.720
+not great especially for Tau Tau has a I
+
+00:39:15.720 --> 00:39:18.900
+mean we took 2 000 samples here
+
+00:39:18.900 --> 00:39:21.060
+um and tau's effective sample size is 45
+
+00:39:21.060 --> 00:39:24.180
+and that sounds bad and it's our hat is
+
+00:39:24.180 --> 00:39:25.740
+way above one
+
+00:39:25.740 --> 00:39:26.400
+um
+
+00:39:26.400 --> 00:39:28.740
+so if you look at the trace plot and the
+
+00:39:28.740 --> 00:39:31.200
+tranq plot these are unhealthy chains
+
+00:39:31.200 --> 00:39:32.160
+yeah
+
+00:39:32.160 --> 00:39:34.200
+now if you run this model long enough
+
+00:39:34.200 --> 00:39:37.140
+you're you're going to get uh the right
+
+00:39:37.140 --> 00:39:38.760
+posterior distribution in this
+
+00:39:38.760 --> 00:39:41.760
+particular case but in some cases when
+
+00:39:41.760 --> 00:39:43.740
+you see warnings like this no matter how
+
+00:39:43.740 --> 00:39:45.300
+long you run the model it's not going to
+
+00:39:45.300 --> 00:39:47.640
+fix it so it's worth taking a little bit
+
+00:39:47.640 --> 00:39:50.520
+of time to figure out how to recode the
+
+00:39:50.520 --> 00:39:51.900
+model actually
+
+00:39:51.900 --> 00:39:55.079
+so that it runs better
+
+00:39:55.079 --> 00:39:57.859
+but let's do that after a break
+
+00:39:57.859 --> 00:40:00.119
+go back and review the first half of
+
+00:40:00.119 --> 00:40:02.579
+this think about your branching pass
+
+00:40:02.579 --> 00:40:05.640
+again maybe go find a copy of a Choose
+
+00:40:05.640 --> 00:40:07.880
+Your Own Adventure book read it through
+
+00:40:07.880 --> 00:40:11.160
+and come back whenever you feel like it
+
+00:40:11.160 --> 00:40:14.240
+I will still be here
+
+00:40:19.080 --> 00:40:22.159
+[Music]
+
+00:40:23.160 --> 00:40:26.160
+foreign
+
+00:40:30.119 --> 00:40:33.260
+welcome back
+
+00:40:33.720 --> 00:40:36.359
+so before the break I'd introduced this
+
+00:40:36.359 --> 00:40:39.780
+idea that we could fix the problems with
+
+00:40:39.780 --> 00:40:42.900
+the Markov chain in the in the
+
+00:40:42.900 --> 00:40:45.839
+Bangladesh model that includes Urban
+
+00:40:45.839 --> 00:40:48.060
+versus rural
+
+00:40:48.060 --> 00:40:49.680
+and the trick for doing it is going to
+
+00:40:49.680 --> 00:40:51.119
+seem weird I'm just going to tell you
+
+00:40:51.119 --> 00:40:52.260
+right now
+
+00:40:52.260 --> 00:40:56.099
+and I'm not even going to explain why it
+
+00:40:56.099 --> 00:40:58.980
+works in any deep way but at the end of
+
+00:40:58.980 --> 00:41:00.540
+this week I'll do a bonus round to
+
+00:41:00.540 --> 00:41:02.220
+explain the details in more depth I
+
+00:41:02.220 --> 00:41:04.440
+promise now but for now I want to keep
+
+00:41:04.440 --> 00:41:06.599
+moving so we have a good flow and you
+
+00:41:06.599 --> 00:41:09.240
+can get the top level Concepts instead
+
+00:41:09.240 --> 00:41:13.320
+so the problem in this particular model
+
+00:41:13.320 --> 00:41:14.940
+arises from the fact that there are
+
+00:41:14.940 --> 00:41:18.060
+priors inside of priors that is that we
+
+00:41:18.060 --> 00:41:21.420
+have parameters that Define the shape of
+
+00:41:21.420 --> 00:41:23.700
+the priors for other parameters
+
+00:41:23.700 --> 00:41:25.680
+there's nothing wrong with this in fact
+
+00:41:25.680 --> 00:41:28.320
+it's essential for making varying
+
+00:41:28.320 --> 00:41:29.820
+intercepts work
+
+00:41:29.820 --> 00:41:31.920
+but it can be challenging to sample
+
+00:41:31.920 --> 00:41:34.079
+because it creates awkward spaces for
+
+00:41:34.079 --> 00:41:36.359
+hamiltonian Monte Carlo to cruise around
+
+00:41:36.359 --> 00:41:37.980
+in
+
+00:41:37.980 --> 00:41:40.200
+this kind of Prior where parameters
+
+00:41:40.200 --> 00:41:42.119
+appear inside
+
+00:41:42.119 --> 00:41:44.760
+the prior for other parameters like the
+
+00:41:44.760 --> 00:41:47.040
+prior shown in red on the screen are
+
+00:41:47.040 --> 00:41:49.260
+called centered priors the idea is that
+
+00:41:49.260 --> 00:41:51.660
+there are parameters which Center them
+
+00:41:51.660 --> 00:41:54.540
+or locate them in particular places
+
+00:41:54.540 --> 00:41:56.880
+but we can re-express this exact
+
+00:41:56.880 --> 00:41:59.240
+mathematical statistical estimator
+
+00:41:59.240 --> 00:42:02.160
+without centering the priors
+
+00:42:02.160 --> 00:42:04.140
+here's the idea I just want to give you
+
+00:42:04.140 --> 00:42:06.980
+the intuition so
+
+00:42:06.980 --> 00:42:09.660
+there's this thing called a z-score now
+
+00:42:09.660 --> 00:42:12.660
+z-score is a standardized gaussian
+
+00:42:12.660 --> 00:42:15.660
+deviation you can calculate it for many
+
+00:42:15.660 --> 00:42:16.800
+thanks sample from a gaussian
+
+00:42:16.800 --> 00:42:18.780
+distribution by subtracting the mean of
+
+00:42:18.780 --> 00:42:20.400
+that distribution and then dividing by
+
+00:42:20.400 --> 00:42:22.619
+the standard deviation so this formula
+
+00:42:22.619 --> 00:42:26.640
+on the screen Z or Z if you prefer sub J
+
+00:42:26.640 --> 00:42:30.540
+is equal to Alpha sub J minus Alpha bar
+
+00:42:30.540 --> 00:42:32.460
+so we're taking the particular value
+
+00:42:32.460 --> 00:42:35.280
+Alpha sub J and subtracting the mean and
+
+00:42:35.280 --> 00:42:36.660
+then we divide
+
+00:42:36.660 --> 00:42:41.339
+uh the remainder by Sigma
+
+00:42:41.339 --> 00:42:43.680
+and that's called the z-score it's a
+
+00:42:43.680 --> 00:42:45.359
+deviation in a standardized normal
+
+00:42:45.359 --> 00:42:47.099
+distribution it's used in a bunch of
+
+00:42:47.099 --> 00:42:48.900
+statistical tests
+
+00:42:48.900 --> 00:42:50.099
+you can do this with any normal
+
+00:42:50.099 --> 00:42:51.839
+distribution it's a perfectly harmless
+
+00:42:51.839 --> 00:42:53.579
+transformation you can always reverse it
+
+00:42:53.579 --> 00:42:55.680
+in fact to reverse it you just use this
+
+00:42:55.680 --> 00:42:58.140
+formula Alpha sub J is Alpha bar plus
+
+00:42:58.140 --> 00:43:02.280
+the z-score for that J times Sigma and
+
+00:43:02.280 --> 00:43:03.960
+then you're right back on the original
+
+00:43:03.960 --> 00:43:05.099
+scale
+
+00:43:05.099 --> 00:43:08.940
+so we can use this trick to do all of
+
+00:43:08.940 --> 00:43:11.460
+the posterior updating on the z-scores
+
+00:43:11.460 --> 00:43:13.680
+and what's nice about that is it's the
+
+00:43:13.680 --> 00:43:15.540
+z-scores don't have any parameters
+
+00:43:15.540 --> 00:43:17.880
+inside them because they're normal 0 1
+
+00:43:17.880 --> 00:43:21.119
+in the prior I'll say that again we can
+
+00:43:21.119 --> 00:43:23.220
+use this trick to re-express this model
+
+00:43:23.220 --> 00:43:25.619
+so that the hamiltonian Monte Carlo
+
+00:43:25.619 --> 00:43:27.900
+doesn't have to move around inside the
+
+00:43:27.900 --> 00:43:29.940
+distribution of alpha sub J it just has
+
+00:43:29.940 --> 00:43:31.640
+to move around inside the distribution
+
+00:43:31.640 --> 00:43:37.319
+of z alpha sub Alpha comma J and that
+
+00:43:37.319 --> 00:43:39.660
+has no parameters in it it's it has no
+
+00:43:39.660 --> 00:43:40.920
+hyper priors
+
+00:43:40.920 --> 00:43:43.440
+but it's the same model I know this is a
+
+00:43:43.440 --> 00:43:45.900
+super weird trick but it it works
+
+00:43:45.900 --> 00:43:49.020
+so we re-expressed the model in the
+
+00:43:49.020 --> 00:43:50.760
+so-called non-centered version on the
+
+00:43:50.760 --> 00:43:52.740
+right of this screen these two models
+
+00:43:52.740 --> 00:43:54.060
+are the same model
+
+00:43:54.060 --> 00:43:56.579
+they are mathematically identical but
+
+00:43:56.579 --> 00:43:58.440
+when you use them in your computer to do
+
+00:43:58.440 --> 00:44:00.599
+markup chain Monte Carlo they're not
+
+00:44:00.599 --> 00:44:03.000
+equivalent they reach the same answer
+
+00:44:03.000 --> 00:44:05.460
+eventually but the one on the right is a
+
+00:44:05.460 --> 00:44:08.119
+lot more efficient
+
+00:44:09.000 --> 00:44:11.760
+so let's code the model that way the
+
+00:44:11.760 --> 00:44:13.859
+code looks worse because it's got some
+
+00:44:13.859 --> 00:44:17.000
+extra lines but it's much more efficient
+
+00:44:17.000 --> 00:44:20.460
+the only thing to note here is I have
+
+00:44:20.460 --> 00:44:21.720
+expressed these deterministic
+
+00:44:21.720 --> 00:44:24.660
+relationships for the alpha vector and
+
+00:44:24.660 --> 00:44:26.420
+beta vector
+
+00:44:26.420 --> 00:44:29.220
+same length and I put save in front of
+
+00:44:29.220 --> 00:44:30.599
+them so that we get them back in the
+
+00:44:30.599 --> 00:44:31.859
+posterior distribution even though
+
+00:44:31.859 --> 00:44:33.420
+they're not true parameters because
+
+00:44:33.420 --> 00:44:35.819
+they're strictly functions of the other
+
+00:44:35.819 --> 00:44:39.780
+parameters Alpha bar beta Bar Z sub
+
+00:44:39.780 --> 00:44:43.760
+Alpha and Z sub beta and sigma and Tau
+
+00:44:43.760 --> 00:44:48.000
+in this model samples much better
+
+00:44:48.000 --> 00:44:49.200
+and again
+
+00:44:49.200 --> 00:44:51.359
+the less efficient model works you just
+
+00:44:51.359 --> 00:44:53.099
+would have to run it much longer to have
+
+00:44:53.099 --> 00:44:55.680
+the same confidence in the posterior
+
+00:44:55.680 --> 00:44:58.400
+samples you get
+
+00:44:59.400 --> 00:45:02.579
+okay I know this is a strange trip and
+
+00:45:02.579 --> 00:45:05.520
+it's just a weird fact about scientific
+
+00:45:05.520 --> 00:45:08.579
+research as in art that there's a bunch
+
+00:45:08.579 --> 00:45:11.400
+of technical stuff that's really
+
+00:45:11.400 --> 00:45:13.440
+annoying that you have to deal with to
+
+00:45:13.440 --> 00:45:14.819
+make things work and get the final
+
+00:45:14.819 --> 00:45:17.359
+beautiful product and that's what this
+
+00:45:17.359 --> 00:45:20.040
+non-centering trick is like if you run
+
+00:45:20.040 --> 00:45:22.140
+you build your varying effects model
+
+00:45:22.140 --> 00:45:24.359
+based upon scientific principles and
+
+00:45:24.359 --> 00:45:27.060
+interests some desired estimate and then
+
+00:45:27.060 --> 00:45:28.500
+you have to wrestle with a Markov chain
+
+00:45:28.500 --> 00:45:30.660
+like this glass blower has to wrestle
+
+00:45:30.660 --> 00:45:32.760
+with all the details of melting
+
+00:45:32.760 --> 00:45:34.619
+temperature and ovens and putting things
+
+00:45:34.619 --> 00:45:36.660
+together in the right way and and how
+
+00:45:36.660 --> 00:45:39.420
+much lead is in the class and so on
+
+00:45:39.420 --> 00:45:41.520
+uh but there's just no way of to avoid
+
+00:45:41.520 --> 00:45:43.800
+that if you want the beautiful in
+
+00:45:43.800 --> 00:45:45.720
+product you have to deal with the
+
+00:45:45.720 --> 00:45:48.319
+technical monsters in between
+
+00:45:48.319 --> 00:45:50.339
+and that's what this varying effects
+
+00:45:50.339 --> 00:45:52.020
+trick is like there are other things
+
+00:45:52.020 --> 00:45:53.760
+about estimation and finite samples
+
+00:45:53.760 --> 00:45:57.000
+which are similarly just not what we got
+
+00:45:57.000 --> 00:45:59.640
+into this business for but in the end
+
+00:45:59.640 --> 00:46:02.839
+it's all worth it
+
+00:46:06.300 --> 00:46:08.579
+okay and this is what we get
+
+00:46:08.579 --> 00:46:12.300
+now we have I'm repeating that same kind
+
+00:46:12.300 --> 00:46:13.920
+of structured plot from before where I'm
+
+00:46:13.920 --> 00:46:15.599
+showing the posterior predictive
+
+00:46:15.599 --> 00:46:17.760
+distributions for each district and now
+
+00:46:17.760 --> 00:46:19.920
+I'm splitting it by rural and urban
+
+00:46:19.920 --> 00:46:22.800
+so in the top plot we have rural all the
+
+00:46:22.800 --> 00:46:25.980
+districts are are arrayed from 1 to 61
+
+00:46:25.980 --> 00:46:27.720
+on the horizontal axis and then
+
+00:46:27.720 --> 00:46:29.280
+probability of using contraception on
+
+00:46:29.280 --> 00:46:30.240
+the vertical
+
+00:46:30.240 --> 00:46:32.839
+and this is not the same plot as before
+
+00:46:32.839 --> 00:46:36.599
+because we've taken we've taken out the
+
+00:46:36.599 --> 00:46:39.380
+urban districts
+
+00:46:39.500 --> 00:46:42.420
+and then on the bottom we have the urban
+
+00:46:42.420 --> 00:46:44.460
+districts the same sort of plot shown in
+
+00:46:44.460 --> 00:46:47.339
+blue but only the urban parts of each
+
+00:46:47.339 --> 00:46:48.240
+district
+
+00:46:48.240 --> 00:46:50.640
+there's a lot of complexity here and a
+
+00:46:50.640 --> 00:46:52.440
+lot to investigate and we're not going
+
+00:46:52.440 --> 00:46:53.819
+to try to just deal they're not going to
+
+00:46:53.819 --> 00:46:55.980
+try to analyze this in too much detail
+
+00:46:55.980 --> 00:46:58.079
+just a few things I want to point out
+
+00:46:58.079 --> 00:47:00.800
+first let me label the really extreme
+
+00:47:00.800 --> 00:47:04.260
+empirical values the the black dots with
+
+00:47:04.260 --> 00:47:07.200
+their sample sizes like I did before
+
+00:47:07.200 --> 00:47:09.300
+this is the the action of partial
+
+00:47:09.300 --> 00:47:11.040
+pooling and there's a couple things to
+
+00:47:11.040 --> 00:47:12.359
+note here
+
+00:47:12.359 --> 00:47:15.000
+um this is another chance to appreciate
+
+00:47:15.000 --> 00:47:17.220
+how partial cooling works the cases
+
+00:47:17.220 --> 00:47:19.619
+where the sample sizes are small you get
+
+00:47:19.619 --> 00:47:21.900
+a bigger difference between the red
+
+00:47:21.900 --> 00:47:23.520
+circle and the black circle because
+
+00:47:23.520 --> 00:47:25.920
+there's more shrinkage towards the mean
+
+00:47:25.920 --> 00:47:27.960
+because there's less evidence in that
+
+00:47:27.960 --> 00:47:30.660
+particular District so you'll see like
+
+00:47:30.660 --> 00:47:32.579
+in the top plot where you get sample
+
+00:47:32.579 --> 00:47:35.339
+sizes of four or seven or six there's a
+
+00:47:35.339 --> 00:47:37.440
+greater distance between the posterior
+
+00:47:37.440 --> 00:47:41.339
+mean in red and the raw empirical
+
+00:47:41.339 --> 00:47:44.339
+mean in Black
+
+00:47:44.339 --> 00:47:47.640
+same as true on the bottom we have even
+
+00:47:47.640 --> 00:47:50.579
+more extreme small sample sizes on the
+
+00:47:50.579 --> 00:47:51.839
+bottom a number of districts where
+
+00:47:51.839 --> 00:47:55.200
+there's only two or three women from
+
+00:47:55.200 --> 00:47:57.420
+urban areas because those districts
+
+00:47:57.420 --> 00:47:59.700
+aren't very Urban they only have small
+
+00:47:59.700 --> 00:48:01.579
+towns in them really
+
+00:48:01.579 --> 00:48:04.020
+and this illustrates another Factor
+
+00:48:04.020 --> 00:48:07.440
+about partial pooling is that as you
+
+00:48:07.440 --> 00:48:09.180
+begin to cut up a data set by
+
+00:48:09.180 --> 00:48:11.339
+stratifying by various predictors and
+
+00:48:11.339 --> 00:48:13.740
+you will need to because you have some
+
+00:48:13.740 --> 00:48:15.660
+particular s demand in mind
+
+00:48:15.660 --> 00:48:17.819
+uh you're going to get smaller sample
+
+00:48:17.819 --> 00:48:19.800
+sizes in each unit and in that case
+
+00:48:19.800 --> 00:48:22.319
+partial pooling becomes increasingly
+
+00:48:22.319 --> 00:48:25.440
+valuable because the shrinkage guards
+
+00:48:25.440 --> 00:48:26.880
+against overfitting
+
+00:48:26.880 --> 00:48:28.040
+yeah
+
+00:48:28.040 --> 00:48:31.380
+the overall result here uh you probably
+
+00:48:31.380 --> 00:48:33.180
+appreciated already
+
+00:48:33.180 --> 00:48:35.000
+is that there's more contraceptive use
+
+00:48:35.000 --> 00:48:37.980
+often a lot more in urban areas but
+
+00:48:37.980 --> 00:48:39.900
+there's also a lot of variation in the
+
+00:48:39.900 --> 00:48:42.119
+urban areas and it sort of seems like
+
+00:48:42.119 --> 00:48:43.740
+from eyeballing it there's more
+
+00:48:43.740 --> 00:48:44.839
+variation
+
+00:48:44.839 --> 00:48:48.300
+across urban areas of districts
+
+00:48:48.300 --> 00:48:50.460
+than there is across rural areas of
+
+00:48:50.460 --> 00:48:51.720
+District
+
+00:48:51.720 --> 00:48:54.660
+is to say on average women living in
+
+00:48:54.660 --> 00:48:57.240
+urban areas are used contraception more
+
+00:48:57.240 --> 00:49:00.980
+but they also vary more
+
+00:49:01.440 --> 00:49:03.780
+so we can take a look at the sigma and
+
+00:49:03.780 --> 00:49:07.200
+Tau parameters for these effects for
+
+00:49:07.200 --> 00:49:09.000
+these features and that's what I've done
+
+00:49:09.000 --> 00:49:10.560
+here in the bottom half of this slide
+
+00:49:10.560 --> 00:49:13.319
+these are the posterior distributions
+
+00:49:13.319 --> 00:49:15.900
+for the sigma and Tau that is the
+
+00:49:15.900 --> 00:49:17.480
+standard deviations
+
+00:49:17.480 --> 00:49:20.640
+of the of rates of use across rural
+
+00:49:20.640 --> 00:49:25.380
+areas in red and urban areas in blue and
+
+00:49:25.380 --> 00:49:27.119
+then I've I've added the prior here this
+
+00:49:27.119 --> 00:49:28.319
+is something I often like to do in my
+
+00:49:28.319 --> 00:49:30.240
+own projects is superimposed to Prior
+
+00:49:30.240 --> 00:49:32.460
+for particular distribution to make sure
+
+00:49:32.460 --> 00:49:34.800
+that the data did some work at all right
+
+00:49:34.800 --> 00:49:37.140
+you want to see some uh you want to see
+
+00:49:37.140 --> 00:49:40.380
+the posterior move from the prior uh so
+
+00:49:40.380 --> 00:49:41.940
+what's going on here as you can see is
+
+00:49:41.940 --> 00:49:44.579
+that actually there are many there's a
+
+00:49:44.579 --> 00:49:46.859
+very wide range of standard deviations
+
+00:49:46.859 --> 00:49:48.540
+consistent with Urban and many of them
+
+00:49:48.540 --> 00:49:50.119
+are quite large
+
+00:49:50.119 --> 00:49:52.380
+there's much more evidence about what's
+
+00:49:52.380 --> 00:49:54.200
+going on in rural areas
+
+00:49:54.200 --> 00:49:56.760
+so this is not a confident assertion
+
+00:49:56.760 --> 00:49:58.260
+that there's more variation across urban
+
+00:49:58.260 --> 00:49:59.819
+areas because there's just less data
+
+00:49:59.819 --> 00:50:02.700
+from urban areas from Bangladesh in 1989
+
+00:50:02.700 --> 00:50:05.339
+it wasn't very Urban at the time
+
+00:50:05.339 --> 00:50:09.060
+uh uh and you want to think of this as
+
+00:50:09.060 --> 00:50:10.440
+another example of the case where
+
+00:50:10.440 --> 00:50:11.819
+sometimes what the posterior
+
+00:50:11.819 --> 00:50:14.520
+distribution tells you is that it
+
+00:50:14.520 --> 00:50:16.619
+doesn't know uh how much variation there
+
+00:50:16.619 --> 00:50:18.060
+is and that's what you're seeing in the
+
+00:50:18.060 --> 00:50:20.460
+urban area it could be consistent with
+
+00:50:20.460 --> 00:50:25.520
+low or high or the same as rural
+
+00:50:27.240 --> 00:50:29.160
+okay a final thing to say about this as
+
+00:50:29.160 --> 00:50:32.400
+a bridge to the next lecture
+
+00:50:32.400 --> 00:50:33.300
+um
+
+00:50:33.300 --> 00:50:36.660
+a more natural way perhaps to plot these
+
+00:50:36.660 --> 00:50:38.400
+posterior predictions is to have a graph
+
+00:50:38.400 --> 00:50:40.740
+like the one on the screen where the
+
+00:50:40.740 --> 00:50:42.540
+x-axis is the probability of
+
+00:50:42.540 --> 00:50:44.760
+contraceptive use in a rural area
+
+00:50:44.760 --> 00:50:46.920
+and the vertical is the probability of
+
+00:50:46.920 --> 00:50:49.559
+contraceptive use in the urban area and
+
+00:50:49.559 --> 00:50:53.520
+each point is a district yeah so the
+
+00:50:53.520 --> 00:50:55.800
+horizontal axis is computed using the
+
+00:50:55.800 --> 00:50:57.839
+alphas and the vertical axis is computed
+
+00:50:57.839 --> 00:51:00.480
+using the alphas plus the the betas for
+
+00:51:00.480 --> 00:51:02.940
+each district and what I've shown you so
+
+00:51:02.940 --> 00:51:04.680
+far is just the posterior means and
+
+00:51:04.680 --> 00:51:07.380
+those dashed lines that intersect there
+
+00:51:07.380 --> 00:51:11.940
+are showing you the 50 on each axis
+
+00:51:11.940 --> 00:51:14.579
+so to the left we have less than half of
+
+00:51:14.579 --> 00:51:16.680
+women using contraception to the right
+
+00:51:16.680 --> 00:51:19.680
+uh we have more and above the midpoint
+
+00:51:19.680 --> 00:51:22.500
+line we also have more than 50 using so
+
+00:51:22.500 --> 00:51:23.579
+the first thing to appreciate of course
+
+00:51:23.579 --> 00:51:26.099
+is what you saw on the previous slides
+
+00:51:26.099 --> 00:51:27.960
+is that there's more contraceptive use
+
+00:51:27.960 --> 00:51:29.940
+in urban areas
+
+00:51:29.940 --> 00:51:31.920
+okay the other thing though that's
+
+00:51:31.920 --> 00:51:34.319
+revealed now that was quite hard to see
+
+00:51:34.319 --> 00:51:37.200
+in the previous slides is that there's a
+
+00:51:37.200 --> 00:51:39.660
+strong positive correlation between
+
+00:51:39.660 --> 00:51:41.300
+contraceptive use
+
+00:51:41.300 --> 00:51:44.460
+in both rural and urban areas within a
+
+00:51:44.460 --> 00:51:45.480
+district
+
+00:51:45.480 --> 00:51:47.220
+yeah you see that I'll say that again
+
+00:51:47.220 --> 00:51:49.260
+there's a strong positive correlation
+
+00:51:49.260 --> 00:51:51.480
+between contraceptive use in the rural
+
+00:51:51.480 --> 00:51:54.540
+and urban areas within each district
+
+00:51:54.540 --> 00:51:57.240
+yeah and that's why this uh this cloud
+
+00:51:57.240 --> 00:51:59.819
+of points goes up to the right
+
+00:51:59.819 --> 00:52:02.940
+and that correlation is extra
+
+00:52:02.940 --> 00:52:05.160
+information that we have not exploited
+
+00:52:05.160 --> 00:52:06.839
+in any particular way
+
+00:52:06.839 --> 00:52:08.700
+I'm going to show you it's also a
+
+00:52:08.700 --> 00:52:10.260
+feature of the uncertainty about these
+
+00:52:10.260 --> 00:52:11.579
+points so what I'm going to do next is
+
+00:52:11.579 --> 00:52:13.319
+impose the whole posterior Distribution
+
+00:52:13.319 --> 00:52:14.760
+on here in the form of these 50
+
+00:52:14.760 --> 00:52:18.480
+compatibility regions this is not a
+
+00:52:18.480 --> 00:52:20.760
+beautiful plot I know but what are these
+
+00:52:20.760 --> 00:52:24.599
+These are uh 50 compatibility regions of
+
+00:52:24.599 --> 00:52:26.220
+the joint uncertainties from The Joint
+
+00:52:26.220 --> 00:52:28.500
+posterior distribution of the alphas and
+
+00:52:28.500 --> 00:52:31.319
+Alpha plus betas in each district just
+
+00:52:31.319 --> 00:52:33.540
+to show you that they also tilt up and
+
+00:52:33.540 --> 00:52:34.920
+to the right there's a correlation in
+
+00:52:34.920 --> 00:52:38.460
+the uncertainty of them as well
+
+00:52:38.460 --> 00:52:40.140
+uh this is a little easier to appreciate
+
+00:52:40.140 --> 00:52:42.000
+if we just sub sample down to about six
+
+00:52:42.000 --> 00:52:45.680
+of them and you can see it better here
+
+00:52:45.680 --> 00:52:49.140
+this correlation both in the posterior
+
+00:52:49.140 --> 00:52:50.700
+means and the whole posterior
+
+00:52:50.700 --> 00:52:52.740
+distributions of these parameters Alpha
+
+00:52:52.740 --> 00:52:55.800
+and beta is information that we can use
+
+00:52:55.800 --> 00:52:57.859
+to make even better estimates actually
+
+00:52:57.859 --> 00:53:00.059
+but I'm going to leave that story for
+
+00:53:00.059 --> 00:53:01.559
+the next lecture because it's a bit
+
+00:53:01.559 --> 00:53:04.500
+involved but but the good news is
+
+00:53:04.500 --> 00:53:06.059
+there's more information on the table
+
+00:53:06.059 --> 00:53:09.180
+and we can do even better with tinkering
+
+00:53:09.180 --> 00:53:10.619
+with the Machinery using the right
+
+00:53:10.619 --> 00:53:12.960
+pencils to draw the out
+
+00:53:12.960 --> 00:53:15.240
+okay to summarize
+
+00:53:15.240 --> 00:53:16.859
+um what I've tried to show you here is
+
+00:53:16.859 --> 00:53:19.079
+examples of how to develop additional
+
+00:53:19.079 --> 00:53:22.500
+features into a multi-level model and
+
+00:53:22.500 --> 00:53:24.300
+how to think about begin to think about
+
+00:53:24.300 --> 00:53:27.059
+the covariation among those features so
+
+00:53:27.059 --> 00:53:28.559
+in this case the features are rural
+
+00:53:28.559 --> 00:53:31.260
+versus Urban within each district and in
+
+00:53:31.260 --> 00:53:33.180
+the next lecture I'm going to show you
+
+00:53:33.180 --> 00:53:37.740
+how to do some get some extra value out
+
+00:53:37.740 --> 00:53:41.900
+of the joint uncertainty in the features
+
+00:53:41.900 --> 00:53:44.700
+okay we're in week seven week seven
+
+00:53:44.700 --> 00:53:46.500
+we're doing a yet more multi-level
+
+00:53:46.500 --> 00:53:48.359
+models and this will be a launching
+
+00:53:48.359 --> 00:53:49.800
+point to keep going forward into special
+
+00:53:49.800 --> 00:53:51.960
+topics that use these estimation
+
+00:53:51.960 --> 00:53:55.200
+Technologies in future weeks and I'll
+
+00:53:55.200 --> 00:53:58.400
+see you next time
+
+00:53:59.600 --> 00:54:12.900
+[Music]
+
+00:54:12.900 --> 00:54:14.440
+foreign
+
+00:54:14.440 --> 00:54:17.570
+[Music]
+
