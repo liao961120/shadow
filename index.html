@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
   <head>
     <title>webvtt-player</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +11,25 @@
       <hr>
     </header>
     
-    <label for="Audio">Select Audio:</label>
-    <select id="audio-id"></select>
+    <!-- get audio from web -->
+    <label for="Audio">Audio (from web):</label>
+    <select id="audio-id">
+      <option disabled selected value> -- select an option -- </option>
+    </select>
     <br ><br >
 
-    <div id="webvtt-player" data-audio="data/rethinking-lec13/audio.mp3" data-transcript="data/rethinking-lec13/transcript.vtt"></div>
+    <!-- get audio/caption from local -->
+    <div class="upload">
+      <span>Audio (from local):</span>
+      <input type="file" id="video" name="Audio/Video (mp4)" accept=".mp3,.mp4,.mkv,.webm" >
 
+      <br>
+      <span>Caption (from local): </span>
+      <input type="file" id="caption" name="Caption" accept=".vtt" >
+    </div>
+    <br>
+
+    <div id="webvtt-player" data-audio="" data-transcript=""></div>
     <script id="player-src" type="text/javascript" src="webvtt-player.js"></script>
 
     <script>
@@ -54,7 +66,24 @@
             opt.innerText = e;
             select.appendChild(opt)
           })
+          select.dispatchEvent( new Event('change') );
         });
+
+
+      // Upload audio/caption from local 
+      const video = document.getElementById("video");
+      const caption = document.getElementById("caption");
+      
+      video.addEventListener("change", function() {
+          const objectURL = window.URL.createObjectURL(this.files[0]);
+          document.getElementById('webvtt-player').dataset.audio = objectURL;
+          reload_player();
+      })
+      caption.addEventListener("change", function() {
+          const objectURL = window.URL.createObjectURL(this.files[0]);
+          document.getElementById('webvtt-player').dataset.transcript = objectURL;
+          reload_player();
+      })
     </script>
 
 

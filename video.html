@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Playing a local video</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<style>
+html, body, video {
+	padding: 0;
+	margin: 0;
+}
+div.video {
+    display: block;
+    width: 70%;
+    padding:0;
+    margin:0;
+    min-width: 370px;
+}
+video {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 auto;
+}
+div.upload {
+    margin: 1%;
+}
+div.upload span {
+    display: inline-block;
+    width: 5.8em;
+}
+</style>
+</head>
+<body>
+
+    <div class="upload">
+        <span>Video/Audio:</span>
+        <input type="file" id="video" name="Audio/Video (mp4)" accept=".mp4,.mkv,.webm" >
+  
+        <br>
+        <span>Caption: </span>
+        <input type="file" id="caption" name="Caption" accept=".vtt" >
+    </div>
+    <br>
+    
+    <div class="video">
+        <video controls src="data/BobDylan/audio.mp4">
+            <track default kind="captions" src="data/BobDylan/transcript.vtt">
+        </video>
+    </div>
+
+    <script>
+        const video = document.getElementById("video");
+        const caption = document.getElementById("caption");
+        video.addEventListener("change", function() {
+            const objectURL = window.URL.createObjectURL(this.files[0]);
+            document.querySelector("video").src = objectURL;
+        })
+        caption.addEventListener("change", function() {
+            const objectURL = window.URL.createObjectURL(this.files[0]);
+            document.querySelector("video > track").src = objectURL;
+        })
+    </script>
+
+
+</body>
+</html>
